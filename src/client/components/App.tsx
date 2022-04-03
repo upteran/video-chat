@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { hot } from "react-hot-loader";
 
-import { Chat } from "../features/Chat";
+import { Chat } from "./TextChat";
 
 // import "../../assetscss/App.scss";
 
-class App extends React.Component<Record<string, unknown>, undefined> {
-  public render() {
-    return (
-      <div className="app">
-        <Chat />
-      </div>
-    );
-  }
+function App() {
+  return (
+    <div className="app">
+      <Chat />
+    </div>
+  );
 }
 
 declare let module: Record<string, unknown>;

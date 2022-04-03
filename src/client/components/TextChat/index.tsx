@@ -1,8 +1,8 @@
 import React from "react";
 
-import { UsersList } from "./UsersList";
-import { MessagesView } from "./MessagesView";
-import { MessageInput } from "./MessageInput";
+import { UsersList } from "../../features/Users/UsersList";
+import { MessagesView } from "../../features/Messages/MessagesView";
+import { MessageInput } from "../../features/Messages/MessageInput";
 
 import "./styles.scss";
 

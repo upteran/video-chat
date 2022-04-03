@@ -1,22 +1,18 @@
-"use strict";
+import { WebSocketServer } from "ws";
 
-const fastify = require("fastify")();
-fastify.register(require("fastify-websocket"));
+const wss = new WebSocketServer({ port: 8000 });
 
-fastify.get(
-  "/",
-  { websocket: true },
-  (connection: any /* SocketStream */, req: any /* FastifyRequest */) => {
-    connection.socket.on("message", (message: any) => {
-      // message.toString() === 'hi from client'
-      connection.socket.send(JSON.stringify("hi from server"));
-    });
-  },
-);
+wss.on("connection", function connection(ws) {
+  ws.on("message", function message(data) {
+    console.log("received: %s", data);
+    ws.send(data.toString());
+  });
+});
 
-fastify.listen(8000, (err: any) => {
-  if (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
+wss.on("error", (err) => {
+  console.log("error", err);
+});
+
+wss.on("close", (msg: any) => {
+  console.log("close", msg);
 });

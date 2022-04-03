@@ -13,6 +13,7 @@ export const MessageInput = () => {
 
   const onClick = async () => {
     sendUserMessageFx(value);
+    setValue("");
   };
 
   return (
