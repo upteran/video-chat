@@ -6,7 +6,8 @@ const wss = new WebSocketServer({ port: 8000 });
 wss.on("connection", function connection(ws) {
   ws.on("message", function message(data) {
     console.log("received: %s", data);
-    if (data?.method === "sendUserData") {
+    const d: any = JSON.stringify(data.toString());
+    if (d?.method === "addUser") {
       ws.send({ token: nanoid() });
       return;
     }

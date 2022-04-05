@@ -1,5 +1,6 @@
 import { createStore, createEffect } from "effector";
 import { nanoid } from "nanoid";
+import { setCookie } from "nookies";
 
 import { WsMessageType } from "../../../services/ws/types";
 import { wsService } from "../../../services/ws";
@@ -10,7 +11,7 @@ const namespace = "account";
 const createUser = (userName: string): WsMessageType<UserType> => ({
   id: nanoid(),
   namespace,
-  method: "sendUserData",
+  method: "addUser",
   params: {
     name: userName,
     chatId: nanoid(),
@@ -47,4 +48,11 @@ export const $userList = createStore([])
 
 $userList.watch((messages) => {
   console.log("change watch", messages);
+  if (messages.length) {
+    const [user]: Array<UserType> = messages;
+    setCookie(null, "token", user.userId, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: "/",
+    });
+  }
 });
