@@ -24,7 +24,7 @@ export const MessageInput = () => {
         value={value}
         onChange={onChange}
       />
-      <button className="sendBtn" onClick={onClick}>
+      <button className="sendMsgBtn" onClick={onClick}>
         Send
       </button>
     </div>

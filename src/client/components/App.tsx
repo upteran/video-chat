@@ -3,7 +3,7 @@ import { hot } from "react-hot-loader";
 
 import { Chat } from "./TextChat";
 
-// import "../../assetscss/App.scss";
+import "./styles.scss";
 
 function App() {
   return (

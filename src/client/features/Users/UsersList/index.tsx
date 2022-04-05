@@ -1,7 +1,7 @@
 import React from "react";
 import { useStore } from "effector-react";
 
-import { AddUser } from "./AddUser";
+import { AddUser } from "../AddUser";
 import { UserType } from "../types";
 import { $userList } from "../store";
 
