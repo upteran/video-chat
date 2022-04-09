@@ -17,14 +17,16 @@ export const MessageInput = () => {
   };
 
   return (
-    <div>
-      <input
-        className="msgInput"
-        type="text"
-        value={value}
-        onChange={onChange}
-      />
-      <button className="sendMsgBtn" onClick={onClick}>
+    <div className="flex flex-row items-center">
+      <div className="basis-5/6">
+        <input
+          className="form-input rounded block w-full shadow-sm border-gray-300"
+          type="text"
+          value={value}
+          onChange={onChange}
+        />
+      </div>
+      <button className="basis-1/4 bg-teal-400 rounded" onClick={onClick}>
         Send
       </button>
     </div>

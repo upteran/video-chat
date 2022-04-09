@@ -10,7 +10,7 @@ import "./styles.scss";
 export const UsersList = () => {
   const users = useStore($userList);
   return (
-    <div className="userList">
+    <div className="userList basis-1/4 border-gray-300">
       {users.map(({ name, userId }: UserType) => (
         <div className="userListLine" key={userId}>
           {name}

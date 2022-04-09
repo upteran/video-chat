@@ -73,6 +73,8 @@ export class WebSocketService {
   }
 }
 
-export const wsService = new WebSocketService({ url: "ws://localhost:8000" });
+export const wsService = new WebSocketService({
+  url: "ws://192.168.3.19:8000",
+});
 
 export const destroy = wsService.init();

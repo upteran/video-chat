@@ -10,7 +10,7 @@ export const MessagesView = () => {
   const messages = useStore($messagesList);
   console.log("messages", messages);
   return (
-    <div className="messages">
+    <div className="messages basis-5/6 rounded shadow-sm border-gray-300">
       {messages.map(({ text, messageId }: MessageType) => (
         <div key={messageId}>{text}</div>
       ))}
