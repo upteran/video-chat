@@ -3,15 +3,47 @@ import { nanoid } from "nanoid";
 
 const wss = new WebSocketServer({ port: 8000 });
 
+type MethodsType = {
+  [key: string]: (data: any) => void;
+};
+
+const messageHandlers = (type: string, data: any, ws: any) => {
+  const methods: MethodsType = {
+    addUser: (data) => {
+      ws.send({ token: nanoid() });
+    },
+    sendMessage: (data) => {
+      ws.send(data.toString());
+    },
+    defaultAction: (data) => {
+      ws.send(data.toString());
+    },
+  };
+
+  return (methods[type] || methods.defaultAction)(data);
+};
+
+type ClientType = {
+  clientId: string;
+  socket: any;
+};
+
+const clients: Array<ClientType> = [];
+
+function addConnection(socket: any, arr: Array<ClientType>) {
+  const clientId = nanoid();
+  arr.push({
+    clientId,
+    socket,
+  });
+}
+
 wss.on("connection", function connection(ws) {
+  addConnection(ws, clients);
   ws.on("message", function message(data) {
     console.log("received: %s", data);
     const d: any = JSON.stringify(data.toString());
-    if (d?.method === "addUser") {
-      ws.send({ token: nanoid() });
-      return;
-    }
-    ws.send(data.toString());
+    messageHandlers(d?.method, data, ws);
   });
 });
 
