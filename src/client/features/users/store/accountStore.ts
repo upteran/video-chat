@@ -5,7 +5,7 @@ import { WsMessageType } from "../../../services/ws/types";
 import { wsService } from "../../../services/ws";
 import { UserType } from "../types";
 
-import { createUser } from "./msgEvents";
+import { createUser } from "./events";
 import { updateUserListBridgeFx } from "./wsBridge";
 
 // account store

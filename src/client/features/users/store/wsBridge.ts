@@ -1,7 +1,7 @@
 import { createEffect } from "effector";
 
 import { wsService } from "../../../services/ws";
-import { namespace } from "./msgEvents";
+import { namespace } from "./events";
 
 export const updateUserListBridgeFx = createEffect();
 

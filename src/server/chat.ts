@@ -11,6 +11,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
   const methods: MethodsType = {
     addUser: (data) => {
       ws.send({ token: nanoid() });
+      ws.send(data.toString());
     },
     sendMessage: (data) => {
       ws.send(data.toString());
