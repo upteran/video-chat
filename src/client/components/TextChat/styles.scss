@@ -1,5 +1,14 @@
 .chat {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   height: 80vh;
+  background: #fff;
+  padding: 25px;
+}
+
+.chatInner {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
 }

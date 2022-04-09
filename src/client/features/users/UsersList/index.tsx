@@ -16,7 +16,6 @@ export const UsersList = () => {
           {name}
         </div>
       ))}
-      <AddUser />
     </div>
   );
 };

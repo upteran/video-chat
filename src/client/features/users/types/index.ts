@@ -4,3 +4,7 @@ export type UserType = {
   chatId: string;
   messages: Array<string>;
 };
+
+export type UserAccountType = {
+  loggedIn: boolean;
+};

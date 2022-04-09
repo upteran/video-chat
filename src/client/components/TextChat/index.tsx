@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { parseCookies, setCookie } from "nookies";
+import { Link, Route } from "wouter";
+import { useStore } from "effector-react";
 
-import { UsersList } from "../../features/Users/UsersList";
-import { AddUser } from "../../features/Users/AddUser";
-import { MessagesView } from "../../features/Messages/MessagesView";
-import { MessageInput } from "../../features/Messages/MessageInput";
+import { UsersList } from "../../features/users/UsersList";
+import { AddUser } from "../../features/users/AddUser";
+import { MessagesView } from "../../features/messages/MessagesView";
+import { MessageInput } from "../../features/messages/MessageInput";
+
+import { $accountData } from "../../features/users/store";
 
 import "./styles.scss";
 
 export const Chat = () => {
-  const token = false;
+  const { isLogin } = useStore($accountData);
   return (
     <div>
-      {token ? (
+      {isLogin ? (
         <div className="chat">
-          <div>
-            <UsersList />
+          <div className="chatInner">
             <MessagesView />
+            <UsersList />
           </div>
           <MessageInput />
         </div>
