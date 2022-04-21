@@ -1,0 +1,24 @@
+.sendMessageWrapper {
+  position: relative;
+  padding: 18px;
+}
+
+input[type='text'] {
+  width: 100%;
+  height: 35px;
+  transition: border-color .25s ease-out;
+  outline: none;
+}
+
+.sendMsgBtn {
+  position: absolute;
+  top: calc(50% - 12px);
+  right: 35px;
+  transform: translateY(calc(-50% + 12px));
+  background: blue;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 50%;
+}

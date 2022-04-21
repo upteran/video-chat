@@ -3,7 +3,7 @@ import cx from "classnames";
 
 import { sendUserFx } from "../store";
 
-import "./styles.scss";
+import "./styles.css";
 
 export const AddUser = () => {
   const [value, setValue] = useState<string>("");

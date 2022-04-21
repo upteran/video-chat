@@ -11,25 +11,27 @@ import { MessageInput } from "../../messages/MessageInput";
 import { $accountData } from "../../users/store";
 import { $chatStore } from "../store";
 
-import "./styles.scss";
+import "./styles.css";
 
 export const Chat = () => {
   // const { list } = useStore($chatStore);
   const { isLogin } = useStore($accountData);
   // const [chat] = list;
   return (
-    <div>
-      {isLogin ? (
-        <div className="chat">
-          <div className="chatInner flex flex-row">
-            <MessagesView />
+    <div className="">
+      <div className="wrap">
+        {isLogin ? (
+          <div className="chat">
             <UsersList />
+            <div className="chatInner">
+              <MessagesView />
+              <MessageInput />
+            </div>
           </div>
-          <MessageInput />
-        </div>
-      ) : (
-        <AddUser />
-      )}
+        ) : (
+          <AddUser />
+        )}
+      </div>
     </div>
   );
 };

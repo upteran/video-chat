@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { sendUserMessageFx } from "../store";
 
-import "./styles.scss";
+import "./styles.css";
 
 export const MessageInput = () => {
   const [value, setValue] = useState("");
@@ -17,18 +17,21 @@ export const MessageInput = () => {
   };
 
   return (
-    <div className="flex flex-row items-center">
-      <div className="basis-5/6">
+    <div className="">
+      <div className="sendMessageWrapper ">
         <input
-          className="form-input rounded block w-full shadow-sm border-gray-300"
+          className="msgInputText"
           type="text"
           value={value}
           onChange={onChange}
         />
+        <button
+          className="sendMsgBtn"
+          onClick={onClick}
+        >
+          Send
+        </button>
       </div>
-      <button className="basis-1/4 bg-teal-400 rounded" onClick={onClick}>
-        Send
-      </button>
     </div>
   );
 };

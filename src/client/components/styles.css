@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --border-color: #e9e9e9;
+}
+
 button {
   height: 42px;
   border: none;
