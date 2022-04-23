@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { sendUserMessageFx } from "../store";
+import { sendChatMessage } from "../store";
 
 import "./styles.css";
 
@@ -12,7 +12,7 @@ export const MessageInput = () => {
   };
 
   const onClick = async () => {
-    sendUserMessageFx(value);
+    sendChatMessage(value);
     setValue("");
   };
 

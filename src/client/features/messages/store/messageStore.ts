@@ -1,21 +1,22 @@
-import { createStore, createEffect } from "effector";
-import { nanoid } from "nanoid";
+import { createStore, createEvent } from "effector";
 
 import { wsService } from "../../../services/ws";
 import { WsMessageType } from "../../../services/ws/types";
 import { MessageType } from "../types";
 
 import { createMessage } from "./events";
-import { updateMessagesListBridgeFx } from "./wsBridge";
+import { updateMessagesListBridgeEvent } from "./wsBridge";
 
-export const sendUserMessageFx = createEffect((messageText: string) => {
-  wsService.send(createMessage(messageText));
+export const sendChatMessage = createEvent<string>("sendChatMessage");
+
+sendChatMessage.watch((messageText: string) => {
+  wsService.send(createMessage(messageText, "asdasd"));
 });
 
 export const $messagesList = createStore([]).on(
   // @ts-ignore
-  updateMessagesListBridgeFx.done,
-  (list, { result }: { result: WsMessageType<MessageType> }) => {
+  updateMessagesListBridgeEvent,
+  (list, result: WsMessageType<MessageType>) => {
     console.log("WORK", result);
     return result?.params ? [...list, result.params] : [];
   },

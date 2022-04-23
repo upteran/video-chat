@@ -8,6 +8,7 @@ export const AddChat: React.FC<IAddChatProps> = ({ openNewChatStep }) => {
   const [chatLink, setChatLink] = useState<string>("");
   const onEnterChatClick = () => {
     console.log("create chat");
+    if (!chatLink.length) return;
   };
   const onInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setChatLink(e.target.value);

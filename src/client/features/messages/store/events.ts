@@ -4,13 +4,16 @@ import { nanoid } from "nanoid";
 
 export const namespace = "message";
 
-export const createMessage = (msg: string): WsMessageType<MessageType> => ({
+export const createMessage = (
+  msg: string,
+  chatId: string,
+): WsMessageType<MessageType> => ({
   id: nanoid(),
   namespace,
   method: "sendMessage",
   params: {
     text: msg,
-    chatId: nanoid(),
+    chatId,
     messageId: nanoid(),
   },
 });

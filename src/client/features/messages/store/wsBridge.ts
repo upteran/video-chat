@@ -1,13 +1,11 @@
-import { createEffect } from "effector";
+import { createEvent } from "effector";
 import { wsService } from "../../../services/ws";
 
 const namespace = "message";
 
-export const updateMessagesListBridgeFx = createEffect();
-
-updateMessagesListBridgeFx.use((data: any) => {
-  return data;
-});
+export const updateMessagesListBridgeEvent = createEvent(
+  "updateMessagesListEvent",
+);
 
 // store fn
-wsService.subscribeStore({ name: namespace, cb: updateMessagesListBridgeFx });
+wsService.subscribeStore({ name: namespace, cb: updateMessagesListBridgeEvent });

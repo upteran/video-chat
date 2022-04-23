@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import cx from "classnames";
 
-import { sendUserFx } from "../store";
+import { createChat } from "../../textChat/store";
 
 import "./styles.css";
 
@@ -20,7 +20,7 @@ export const AddUser = () => {
     if (!value) {
       setError(true);
     } else {
-      sendUserFx(value);
+      createChat({ userName: value });
       setValue("");
       setError(null);
     }

@@ -7,20 +7,18 @@ import { UsersList } from "../users/UsersList";
 import { MessagesView } from "../messages/MessagesView";
 import { MessageInput } from "../messages/MessageInput";
 
-import { $accountData } from "../users/store";
 import { $chatStore } from "./store";
 
 import "./styles.css";
 import { LogIn } from "../../process/logIn";
 
 export const Chat = () => {
-  // const { list } = useStore($chatStore);
-  const { isLogin } = useStore($accountData);
-  // const [chat] = list;
+  const { isLoaded } = useStore($chatStore);
+
   return (
     <div className="">
       <div className="wrap">
-        {isLogin ? (
+        {isLoaded ? (
           <div className="chat">
             <UsersList />
             <div className="chatInner">

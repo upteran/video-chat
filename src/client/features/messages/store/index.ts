@@ -1,2 +1,2 @@
-export { sendUserMessageFx, $messagesList } from "./messageStore";
+export { sendChatMessage, $messagesList } from "./messageStore";
 export { createMessage } from "./events";
