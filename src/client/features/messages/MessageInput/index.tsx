@@ -25,10 +25,7 @@ export const MessageInput = () => {
           value={value}
           onChange={onChange}
         />
-        <button
-          className="sendMsgBtn"
-          onClick={onClick}
-        >
+        <button className="sendMsgBtn" onClick={onClick}>
           Send
         </button>
       </div>

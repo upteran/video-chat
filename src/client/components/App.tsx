@@ -1,7 +1,7 @@
 import React from "react";
 import { hot } from "react-hot-loader";
 
-import { Chat } from "../features/textChat/template";
+import { Chat } from "../features/textChat";
 
 import "./styles.css";
 

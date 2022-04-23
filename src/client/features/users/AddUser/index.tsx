@@ -27,7 +27,7 @@ export const AddUser = () => {
   };
 
   return (
-    <div className="addUser shadow-lg border-gray-200 bg-zinc-100">
+    <>
       <div className="">
         <p className="font-sans">Enter your nick:</p>
       </div>
@@ -45,11 +45,11 @@ export const AddUser = () => {
         />
       </div>
       <button
-        className="sendBtn bg-sky-500 hover:bg-cyan-400 rounded-sm shadow-lg"
+        className="group relative w-full flex justify-center align-middle py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-2.5 mt-3.5"
         onClick={onClick}
       >
         Send
       </button>
-    </div>
+    </>
   );
 };

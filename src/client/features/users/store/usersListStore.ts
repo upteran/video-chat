@@ -31,10 +31,10 @@ export const $userList = createStore(list).on(
 
 $userList.watch((messages) => {
   if (messages.length) {
-    const [user]: Array<UserType> = messages;
-    setCookie(null, "token", user.userId, {
-      maxAge: 30 * 24 * 60 * 60,
-      path: "/",
-    });
+    // const [user]: Array<UserType> = messages;
+    // setCookie(null, "token", user.userId, {
+    //   maxAge: 30 * 24 * 60 * 60,
+    //   path: "/",
+    // });
   }
 });
