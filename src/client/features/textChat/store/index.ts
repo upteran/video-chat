@@ -1,14 +1,25 @@
-import { createEvent, createStore, Event } from "effector";
+import { createEvent, createStore, Event, sample } from "effector";
 import { parseCookies, setCookie } from "nookies";
-
-import { wsService } from "../../../services/ws";
-import { createChatBridgeEvent } from "./wsBridge";
-import { WsMessageType } from "../../../services/ws/types";
-import { IChat } from "../types";
 import { nanoid } from "nanoid";
-import { createUser } from "../../users/helpers";
+
+// ws
+import { wsService } from "../../../services/ws";
+import { WsMessageType } from "../../../services/ws/types";
+import { buildCreateChatMsg, buildConnectChatMsg } from "./wsMessages";
+import {
+  createChatBridgeEvent,
+  createChat,
+  connectChat,
+  connectChatBridgeEvent,
+} from "./wsBridge";
+import { $userStore } from "../../users/store";
+
+// chat
+import { IChat } from "../types";
 import { ChatStateType } from "../types";
-import { buildChatMsg } from "./wsMessages";
+
+// user
+import { createUser } from "../../users/helpers";
 
 const initialState = {
   chat: null,
@@ -16,32 +27,58 @@ const initialState = {
   isFetching: false,
 };
 
-export const createChat = createEvent<object>("addChat");
+export const $chatStore = createStore<ChatStateType>(initialState)
+  .on(
+    // @ts-ignore
+    createChatBridgeEvent,
+    ({ chat }, message: WsMessageType<IChat>) => {
+      const { params } = message;
 
-createChat.watch(({ userName }: any) => {
+      // move to watch or another method
+      setCookie(null, "chatToken", params.chatId, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: "/",
+      });
+      return {
+        chat: params,
+        isLoaded: true,
+        isFetching: false,
+      };
+    },
+  )
+  .on(
+    // @ts-ignore
+    connectChatBridgeEvent,
+    ({ chat }, message: WsMessageType<IChat>) => {
+      const { params } = message;
+
+      // move to watch or another method
+      // setCookie(null, "chatToken", params.chatId, {
+      //   maxAge: 30 * 24 * 60 * 60,
+      //   path: "/",
+      // });
+      return {
+        chat: params,
+        isLoaded: true,
+        isFetching: false,
+      };
+    },
+  );
+
+const createChatSample = sample({
+  source: { chat: $chatStore, user: $userStore },
+  clock: createChat,
+});
+
+createChatSample.watch(({ user }: any) => {
   const chatId = nanoid();
-  const users = createUser(userName, chatId);
-
-  const msg = buildChatMsg(chatId, [users]);
+  const users = createUser(user.name, chatId);
+  const msg = buildCreateChatMsg(chatId, [users]);
   wsService.send(msg);
 });
 
-export const $chatStore = createStore<ChatStateType>(initialState).on(
-  // @ts-ignore
-  createChatBridgeEvent,
-  ({ chat }, message: WsMessageType<IChat>) => {
-    console.log("EVENT RET");
-    const { params } = message;
-
-    // move to watch or another method
-    setCookie(null, "chatToken", params.chatId, {
-      maxAge: 30 * 24 * 60 * 60,
-      path: "/",
-    });
-    return {
-      chat: params,
-      isLoaded: true,
-      isFetching: false,
-    };
-  },
-);
+connectChat.watch((chatId) => {
+  const user = createUser("sadasdasds", chatId);
+  const msg = buildConnectChatMsg(chatId, user);
+  wsService.send(msg);
+});

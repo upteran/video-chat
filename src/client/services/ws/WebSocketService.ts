@@ -54,8 +54,7 @@ export class WebSocketService {
         return "unsub2";
       },
       (msg: WsMessageType<any>) => {
-        console.log("SubscribeStoreConfig", msg);
-        return msg.namespace === name;
+        return msg.method === name;
       },
     );
 
@@ -69,7 +68,7 @@ export class WebSocketService {
   };
 
   req(msg: WsMessageType<any>): void {
-    console.log("message", msg);
+    // console.log("message", msg);
   }
 }
 

@@ -1,9 +1,16 @@
-import { createEvent } from "effector";
-import { wsService } from "../../../services/ws";
+import { createWsBridge } from "../../../services/ws/createWsBridge";
 
 export const namespace = "chat";
 
-export const createChatBridgeEvent = createEvent("createChat");
+const { ev: createChat, bridge: createChatBridgeEvent } =
+  createWsBridge<object>("createChat");
 
-// store fn
-wsService.subscribeStore({ name: namespace, cb: createChatBridgeEvent });
+const { ev: connectChat, bridge: connectChatBridgeEvent } =
+  createWsBridge<string>("connectChat");
+
+export {
+  createChat,
+  createChatBridgeEvent,
+  connectChat,
+  connectChatBridgeEvent,
+};

@@ -17,7 +17,6 @@ export const $messagesList = createStore([]).on(
   // @ts-ignore
   updateMessagesListBridgeEvent,
   (list, result: WsMessageType<MessageType>) => {
-    console.log("WORK", result);
     return result?.params ? [...list, result.params] : [];
   },
 );

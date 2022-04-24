@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import cx from "classnames";
 
-import { createChat } from "../../textChat/store";
+import { createUserEvent } from "../store";
 
 import "./styles.css";
 
@@ -20,7 +20,7 @@ export const AddUser = () => {
     if (!value) {
       setError(true);
     } else {
-      createChat({ userName: value });
+      createUserEvent(value);
       setValue("");
       setError(null);
     }

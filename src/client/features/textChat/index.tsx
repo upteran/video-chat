@@ -13,17 +13,20 @@ import "./styles.css";
 import { LogIn } from "../../process/logIn";
 
 export const Chat = () => {
-  const { isLoaded } = useStore($chatStore);
+  const { isLoaded, chat } = useStore($chatStore);
 
   return (
     <div className="">
       <div className="wrap">
         {isLoaded ? (
-          <div className="chat">
-            <UsersList />
-            <div className="chatInner">
-              <MessagesView />
-              <MessageInput />
+          <div className="chatOuter">
+            <div>chat link: {chat?.chatId}</div>
+            <div className="chat">
+              <UsersList />
+              <div className="chatInner">
+                <MessagesView />
+                <MessageInput />
+              </div>
             </div>
           </div>
         ) : (

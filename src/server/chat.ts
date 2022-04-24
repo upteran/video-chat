@@ -12,6 +12,11 @@ type MethodsType = {
   [key: string]: (data: any, clients: Array<ClientType>) => void;
 };
 
+let activeChat: any = {
+  chatId: null,
+  users: [],
+};
+
 const messageHandlers = (
   type: string,
   data: any,
@@ -22,17 +27,46 @@ const messageHandlers = (
     addUser: (data, clients) => {
       clients.forEach(({ socket }) => {
         socket.send({ token: nanoid() });
-        socket.send(data.toString());
+        socket.send(JSON.stringify(data));
+      });
+    },
+    createChat: (data, clients) => {
+      clients.forEach(({ socket }) => {
+        socket.send(JSON.stringify(data));
+      });
+      activeChat = data.params;
+    },
+    connectChat: (data, clients) => {
+      console.log("data.params activeChat", activeChat);
+      activeChat = {
+        chatId: activeChat.chatId,
+        users: [...activeChat.users, data.params.user],
+      };
+      console.log({
+        ...data,
+        params: {
+          ...activeChat,
+        },
+      });
+      clients.forEach(({ socket }) => {
+        socket.send(
+          JSON.stringify({
+            ...data,
+            params: {
+              ...activeChat,
+            },
+          }),
+        );
       });
     },
     sendMessage: (data, clients) => {
       clients.forEach(({ socket }) => {
-        socket.send(data.toString());
+        socket.send(JSON.stringify(data));
       });
     },
     defaultAction: (data, clients) => {
       clients.forEach(({ socket }) => {
-        socket.send(data.toString());
+        socket.send(JSON.stringify(data));
       });
     },
   };
@@ -54,8 +88,9 @@ wss.on("connection", function connection(ws) {
   addConnection(ws, clients);
   ws.on("message", function message(data) {
     console.log("received: %s", data);
-    const d: any = JSON.stringify(data.toString());
-    messageHandlers(d?.method, data, ws, clients);
+    const d: any = data.toString();
+    const parsed = JSON.parse(d);
+    messageHandlers(parsed?.method, parsed, ws, clients);
   });
 });
 

@@ -1,4 +1,5 @@
 import React, { ChangeEventHandler, MouseEventHandler, useState } from "react";
+import { createChat, connectChat } from "../store/wsBridge";
 
 interface IAddChatProps {
   openNewChatStep: () => unknown;
@@ -9,13 +10,14 @@ export const AddChat: React.FC<IAddChatProps> = ({ openNewChatStep }) => {
   const onEnterChatClick = () => {
     console.log("create chat");
     if (!chatLink.length) return;
+    connectChat();
   };
   const onInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setChatLink(e.target.value);
   };
   const newChatClickHandler: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
-    openNewChatStep();
+    createChat({});
   };
   return (
     <>

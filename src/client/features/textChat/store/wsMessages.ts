@@ -1,14 +1,23 @@
-import { nanoid } from "nanoid";
 import { namespace } from "./wsBridge";
 
-export const buildChatMsg = (chatId: string, users: Array<object>) => {
+export const buildCreateChatMsg = (chatId: string, users: Array<object>) => {
   return {
-    id: nanoid(),
     namespace,
     method: "createChat",
     params: {
       chatId,
       users,
+    },
+  };
+};
+
+export const buildConnectChatMsg = (chatId: string, user: any) => {
+  return {
+    namespace,
+    method: "connectChat",
+    params: {
+      chatId,
+      user,
     },
   };
 };
