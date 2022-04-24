@@ -1,3 +1,3 @@
 export { $messagesList } from "./store";
-export { createMessage } from "./events";
-export { sendChatMessage } from "./wsApi";
+export { createMessage } from "./wsMessageBuilders";
+export { sendChatMessage } from "./events";

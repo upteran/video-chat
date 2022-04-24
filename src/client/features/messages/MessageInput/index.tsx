@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useStore } from "effector-react";
 
-import { sendChatMessage } from "../store/wsApi";
+import { sendChatMessage } from "../store/events";
+import { $chatStore } from "../../chat/store";
 
 import "./styles.css";
 
 export const MessageInput = () => {
+  const { chat } = useStore($chatStore);
   const [value, setValue] = useState("");
   const onChange = (ev: any): void => {
     const { target } = ev;
@@ -12,7 +15,8 @@ export const MessageInput = () => {
   };
 
   const onClick = async () => {
-    sendChatMessage(value);
+    if (!chat) return;
+    sendChatMessage({ msg: value, chatId: chat.chatId });
     setValue("");
   };
 

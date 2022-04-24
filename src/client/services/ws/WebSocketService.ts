@@ -48,10 +48,10 @@ export class WebSocketService {
   subscribeStore = ({ cb, name }: SubscribeStoreConfig) => {
     const obs = this.socket?.multiplex(
       () => {
-        return "sub1";
+        return `sub ${name}`;
       },
       () => {
-        return "unsub2";
+        return `unsub ${name}`;
       },
       (msg: WsMessageType<any>) => {
         return msg.method === name;

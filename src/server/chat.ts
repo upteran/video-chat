@@ -1,15 +1,14 @@
 import { WebSocketServer } from "ws";
-import { nanoid } from "nanoid";
+import pino from "pino";
+import { socketController } from "./createClient";
+
+const logger = pino();
 
 const wss = new WebSocketServer({ port: 8000 });
-
-type ClientType = {
-  clientId: string;
-  socket: any;
-};
+socketController.initLogger(logger);
 
 type MethodsType = {
-  [key: string]: (data: any, clients: Array<ClientType>) => void;
+  [key: string]: (data: any) => void;
 };
 
 let activeChat: any = {
@@ -17,80 +16,54 @@ let activeChat: any = {
   users: [],
 };
 
-const messageHandlers = (
-  type: string,
-  data: any,
-  currSocket: any,
-  clients: Array<ClientType>,
-) => {
+const messageHandlers = (type: string, data: any) => {
   const methods: MethodsType = {
-    addUser: (data, clients) => {
-      clients.forEach(({ socket }) => {
-        socket.send({ token: nanoid() });
-        socket.send(JSON.stringify(data));
-      });
-    },
-    createChat: (data, clients) => {
-      clients.forEach(({ socket }) => {
-        socket.send(JSON.stringify(data));
-      });
+    createChat: (data) => {
+      logger.info(`Handle create chat message`);
+      socketController.sendMsgToClients(data.payload.chatId, data);
       activeChat = data.payload;
     },
-    connectChat: (data, clients) => {
-      console.log("data.payload activeChat", activeChat);
+    connectChat: (data) => {
+      logger.info(activeChat, "data.payload activeChat");
       activeChat = {
         chatId: activeChat.chatId,
         users: [...activeChat.users, data.payload.user],
       };
-      console.log({
+      socketController.sendMsgToClients(activeChat.chatId, {
         ...data,
         payload: {
           ...activeChat,
         },
       });
-      clients.forEach(({ socket }) => {
-        socket.send(
-          JSON.stringify({
-            ...data,
-            payload: {
-              ...activeChat,
-            },
-          }),
-        );
-      });
     },
-    sendMessage: (data, clients) => {
-      clients.forEach(({ socket }) => {
-        socket.send(JSON.stringify(data));
-      });
+    sendMessage: (data) => {
+      socketController.sendMsgToClients(data.payload.chatId, data);
     },
-    defaultAction: (data, clients) => {
-      clients.forEach(({ socket }) => {
-        socket.send(JSON.stringify(data));
-      });
+    defaultAction: (data) => {
+      socketController.sendMsgToClients(data.payload.chatId, data);
     },
   };
 
-  return (methods[type] || methods.defaultAction)(data, clients);
+  return (methods[type] || methods.defaultAction)(data);
 };
 
-const clients: Array<ClientType> = [];
-
-function addConnection(socket: any, arr: Array<ClientType>) {
-  const clientId = nanoid();
-  arr.push({
-    clientId,
-    socket,
-  });
-}
-
 wss.on("connection", function connection(ws) {
-  addConnection(ws, clients);
+  //@ts-ignore
+  socketController.addSocket(ws);
+
   ws.on("message", function message(data) {
-    console.log("received: %s", data);
+    logger.info(`received: %s ${data}`);
     const d: any = data.toString();
     const parsed = JSON.parse(d);
-    messageHandlers(parsed?.method, parsed, ws, clients);
+    //@ts-ignore
+    if (parsed?.payload?.chatId && ws?.clientId) {
+      //@ts-ignore
+      socketController.checkChatExist(ws, parsed?.payload?.chatId);
+      messageHandlers(parsed?.method, parsed);
+    } else {
+      // ws.send(JSON.stringify(data));
+      logger.info(`Dead request`);
+    }
   });
 });
 
