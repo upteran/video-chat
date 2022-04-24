@@ -2,13 +2,13 @@ import React from "react";
 import { useStore } from "effector-react";
 
 import "./styles.css";
-import { $chatStore } from "../../textChat/store";
-import { ChatStateType } from "../../textChat/types";
+import { $chatStore } from "../../chat/store";
+import { ChatStateType } from "../../chat/types";
 
 export const UsersList = () => {
   const { isLoaded, chat } = useStore<ChatStateType>($chatStore);
 
-  if (!isLoaded) return null;
+  if (!isLoaded || !chat) return null;
 
   const { users } = chat;
   return (

@@ -34,17 +34,17 @@ const messageHandlers = (
       clients.forEach(({ socket }) => {
         socket.send(JSON.stringify(data));
       });
-      activeChat = data.params;
+      activeChat = data.payload;
     },
     connectChat: (data, clients) => {
-      console.log("data.params activeChat", activeChat);
+      console.log("data.payload activeChat", activeChat);
       activeChat = {
         chatId: activeChat.chatId,
-        users: [...activeChat.users, data.params.user],
+        users: [...activeChat.users, data.payload.user],
       };
       console.log({
         ...data,
-        params: {
+        payload: {
           ...activeChat,
         },
       });
@@ -52,7 +52,7 @@ const messageHandlers = (
         socket.send(
           JSON.stringify({
             ...data,
-            params: {
+            payload: {
               ...activeChat,
             },
           }),

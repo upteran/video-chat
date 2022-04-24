@@ -3,11 +3,11 @@ import { parseCookies, setCookie } from "nookies";
 import { Link, Route } from "wouter";
 import { useStore } from "effector-react";
 
-import { UsersList } from "../users/UsersList";
-import { MessagesView } from "../messages/MessagesView";
-import { MessageInput } from "../messages/MessageInput";
+import { UsersList } from "../../features/users/UsersList";
+import { MessagesView } from "../../features/messages/MessagesView";
+import { MessageInput } from "../../features/messages/MessageInput";
 
-import { $chatStore } from "./store";
+import { $chatStore } from "../../features/chat/store";
 
 import "./styles.css";
 import { LogIn } from "../../process/logIn";

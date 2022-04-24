@@ -5,19 +5,16 @@ import { WsMessageType } from "../../../services/ws/types";
 import { MessageType } from "../types";
 
 import { createMessage } from "./events";
-import { updateMessagesListBridgeEvent } from "./wsBridge";
-
-export const sendChatMessage = createEvent<string>("sendChatMessage");
+import { updateMessagesListWsEvent, sendChatMessage } from "./wsApi";
 
 sendChatMessage.watch((messageText: string) => {
   wsService.send(createMessage(messageText, "asdasd"));
 });
 
-export const $messagesList = createStore([]).on(
-  // @ts-ignore
-  updateMessagesListBridgeEvent,
+export const $messagesList = createStore<any>([]).on(
+  updateMessagesListWsEvent,
   (list, result: WsMessageType<MessageType>) => {
-    return result?.params ? [...list, result.params] : [];
+    return result?.payload ? [...list, result.payload] : [];
   },
 );
 

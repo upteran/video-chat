@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import cx from "classnames";
 
 import { AddUser } from "../../features/users/AddUser";
-import { AddChat } from "../../features/textChat/AddChat";
+import { AddChat } from "../../features/chat/AddChat";
 
 import "./styles.css";
 import { useStore } from "effector-react";

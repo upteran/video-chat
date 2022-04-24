@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { sendChatMessage } from "../store";
+import { sendChatMessage } from "../store/wsApi";
 
 import "./styles.css";
 

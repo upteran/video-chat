@@ -1,23 +1,23 @@
 import React, { ChangeEventHandler, MouseEventHandler, useState } from "react";
-import { createChat, connectChat } from "../store/wsBridge";
+import { useStore } from "effector-react";
 
-interface IAddChatProps {
-  openNewChatStep: () => unknown;
-}
+import { createChat, connectChat } from "../store/events";
+import { $userStore } from "../../users/store";
 
-export const AddChat: React.FC<IAddChatProps> = ({ openNewChatStep }) => {
+export const AddChat: React.FC = () => {
+  const { name } = useStore($userStore);
   const [chatLink, setChatLink] = useState<string>("");
   const onEnterChatClick = () => {
     console.log("create chat");
     if (!chatLink.length) return;
-    connectChat();
+    connectChat({ userName: name, chatId: chatLink });
   };
   const onInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setChatLink(e.target.value);
   };
   const newChatClickHandler: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
-    createChat({});
+    createChat({ userName: name });
   };
   return (
     <>
