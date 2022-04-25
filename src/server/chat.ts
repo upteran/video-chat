@@ -1,19 +1,17 @@
 import { WebSocketServer } from "ws";
 import pino from "pino";
-import { socketController } from "./createClient";
+import { socketController } from "./SocketsController";
+import { chatController } from "./ChatController";
 
 const logger = pino();
 
 const wss = new WebSocketServer({ port: 8000 });
+
 socketController.initLogger(logger);
+chatController.initLogger(logger);
 
 type MethodsType = {
   [key: string]: (data: any) => void;
-};
-
-let activeChat: any = {
-  chatId: null,
-  users: [],
 };
 
 const messageHandlers = (type: string, data: any) => {
@@ -21,23 +19,26 @@ const messageHandlers = (type: string, data: any) => {
     createChat: (data) => {
       logger.info(`Handle create chat message`);
       socketController.sendMsgToClients(data.payload.chatId, data);
-      activeChat = data.payload;
+      chatController.addChat(data.payload);
     },
     connectChat: (data) => {
-      logger.info(activeChat, "data.payload activeChat");
-      activeChat = {
-        chatId: activeChat.chatId,
-        users: [...activeChat.users, data.payload.user],
-      };
-      socketController.sendMsgToClients(activeChat.chatId, {
+      const chatData = chatController.addUserToChat({
+        chatId: data.payload.chatId,
+        user: data.payload.user,
+      });
+      socketController.sendMsgToClients(data.payload.chatId, {
         ...data,
         payload: {
-          ...activeChat,
+          ...chatData,
         },
       });
     },
-    sendMessage: (data) => {
+    updateMessagesList: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data);
+      chatController.addMessageTo({
+        chatId: data.payload.chatId,
+        message: data,
+      });
     },
     defaultAction: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data);

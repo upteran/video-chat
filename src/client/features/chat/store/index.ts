@@ -1,5 +1,5 @@
-import { createEvent, createStore } from "effector";
-import { parseCookies, setCookie } from "nookies";
+import { createStore } from "effector";
+import { setCookie } from "nookies";
 import { nanoid } from "nanoid";
 
 // ws
@@ -16,7 +16,7 @@ import {
 } from "./events";
 
 // chat
-import { IChat } from "../types";
+import { IChat, IChatConnected } from "../types";
 import { ChatStateType } from "../types";
 
 // user
@@ -26,6 +26,7 @@ const initialState = {
   chat: null,
   isLoaded: false,
   isFetching: false,
+  messages: [],
 };
 
 export const $chatStore = createStore<ChatStateType>(initialState)
@@ -44,14 +45,17 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         chat: payload,
         isLoaded: true,
         isFetching: false,
+        messages: [],
       };
     },
   )
   .on(
     // @ts-ignore
     connectChatWsEvent,
-    ({ chat }, message: WsMessageType<IChat>) => {
-      const { payload } = message;
+    ({ chat }, message: WsMessageType<IChatConnected>) => {
+      const {
+        payload: { chatId, users, messages },
+      } = message;
 
       // move to watch or another method
       // setCookie(null, "chatToken", params.chatId, {
@@ -59,9 +63,13 @@ export const $chatStore = createStore<ChatStateType>(initialState)
       //   path: "/",
       // });
       return {
-        chat: payload,
+        chat: {
+          users,
+          chatId,
+        },
         isLoaded: true,
         isFetching: false,
+        messages,
       };
     },
   );

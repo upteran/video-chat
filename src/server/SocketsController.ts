@@ -12,8 +12,8 @@ interface CustomWebSocket extends WebSocket {
 
 class SocketsController {
   sockets: Map<string, ClientType>;
-  chatIdsToSocket: Map<string, Set<string | unknown>>; // [chatId]: []
-  logger: any; // [chatId]: []
+  chatIdsToSocket: Map<string, Set<string | unknown>>;
+  logger: any;
 
   constructor() {
     this.sockets = new Map();
