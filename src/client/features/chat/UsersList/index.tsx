@@ -2,8 +2,8 @@ import React from "react";
 import { useStore } from "effector-react";
 
 import "./styles.css";
-import { $chatStore } from "../../chat/store";
-import { ChatStateType } from "../../chat/types";
+import { $chatStore } from "../store";
+import { ChatStateType } from "../types";
 
 export const UsersList = () => {
   const { isLoaded, chat } = useStore<ChatStateType>($chatStore);

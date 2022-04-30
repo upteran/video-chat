@@ -6,7 +6,7 @@ export type ClientType = {
   chatId: string | null;
 };
 
-interface CustomWebSocket extends WebSocket {
+export interface CustomWebSocket extends WebSocket {
   clientId: string;
 }
 
@@ -23,8 +23,23 @@ class SocketsController {
     this.logger = null;
   }
 
+  get socketsList() {
+    return [...Array.from(this.sockets.keys())];
+  }
+
   initLogger(logger: any) {
     this.logger = logger;
+  }
+
+  removeSocket(socket: CustomWebSocket) {
+    const cid = socket.clientId;
+    if (!cid) return;
+
+    this.sockets.delete(cid);
+
+    this.logger.info(this.socketsList, `List of active socket`);
+    // TODO: add new data format to able remove socketId from chatIdsToSocket
+    // chat = chatIdsToSocket.get(); chat.removeSocket();
   }
 
   addSocket(socket: CustomWebSocket) {
@@ -40,6 +55,8 @@ class SocketsController {
     this.sockets.set(clientId, data);
     const listWithoutChat = this.chatIdsToSocket.get("none");
     listWithoutChat?.add(clientId);
+
+    this.logger.info(this.socketsList, `List of active socket`);
   }
 
   checkChatExist(socket: CustomWebSocket, chatId: string) {

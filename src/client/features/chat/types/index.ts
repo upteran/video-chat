@@ -1,4 +1,4 @@
-import { UserType } from "../../users/types";
+import { UserType } from "../../user/types";
 
 export interface IChat {
   chatId: string;

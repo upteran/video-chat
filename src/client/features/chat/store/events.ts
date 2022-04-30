@@ -11,6 +11,7 @@ const { ev: createChat, bridge: createChatWsEvent } = createWsApi<
   WsMessageType<IChat>
 >("createChat");
 
+// TODO: rename type to some common name
 export type connectChatEventType = {
   userName: string;
   chatId: string;
@@ -21,4 +22,16 @@ const { ev: connectChat, bridge: connectChatWsEvent } = createWsApi<
   WsMessageType<IChatConnected>
 >("connectChat");
 
-export { createChat, createChatWsEvent, connectChat, connectChatWsEvent };
+const { ev: removeFromChat, bridge: removeFromChatWsEvent } = createWsApi<
+  connectChatEventType,
+  WsMessageType<IChatConnected>
+>("removeFromChat");
+
+export {
+  createChat,
+  createChatWsEvent,
+  connectChat,
+  connectChatWsEvent,
+  removeFromChat,
+  removeFromChatWsEvent,
+};

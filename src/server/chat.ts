@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 import pino from "pino";
-import { socketController } from "./SocketsController";
+import { CustomWebSocket, socketController } from "./SocketsController";
 import { chatController } from "./ChatController";
 
 const logger = pino();
@@ -24,6 +24,20 @@ const messageHandlers = (type: string, data: any, ws: any) => {
     },
     connectChat: (data) => {
       const chatData = chatController.addUserToChat({
+        chatId: data.payload.chatId,
+        user: data.payload.user,
+      });
+      if (!chatData) return;
+      socketController.checkChatExist(ws, data.payload.chatId);
+      socketController.sendMsgToClients(data.payload.chatId, {
+        ...data,
+        payload: {
+          ...chatData,
+        },
+      });
+    },
+    removeFromChat: (data) => {
+      const chatData = chatController.removeUserFromChat({
         chatId: data.payload.chatId,
         user: data.payload.user,
       });
@@ -63,8 +77,16 @@ wss.on("connection", function connection(ws) {
     if (parsed?.payload?.chatId && ws?.clientId) {
       messageHandlers(parsed?.method, parsed, ws);
     } else {
-      // ws.send(JSON.stringify(data));
       logger.info(`Dead request`);
+    }
+  });
+
+  ws.on("close", () => {
+    // @ts-ignore
+    const extWs = ws as CustomWebSocket;
+    if (extWs?.clientId) {
+      logger.info(`Remove ${extWs.clientId} from active sockets`);
+      socketController.removeSocket(extWs);
     }
   });
 });

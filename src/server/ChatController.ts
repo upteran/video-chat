@@ -16,6 +16,7 @@ export type MessageType = {
   };
 };
 
+// TODO: add logger to method steps
 class ChatController {
   chats: Map<string, IServerChat>;
   logger: any;
@@ -50,9 +51,35 @@ class ChatController {
       );
       return null;
     }
-    chat?.users.push(user);
+    // TODO: replace check to id
+    // @ts-ignore
+    const isUserExist = chat.users.find(({ name }) => name === user.name);
+    if (!isUserExist) {
+      chat?.users.push(user);
+    }
     return {
       ...chat,
+      messages: this.messages[chatId],
+    };
+  }
+
+  removeUserFromChat({ chatId, user }: { chatId: string; user: object }): any {
+    const chat = this.chats.get(chatId);
+    if (!chat) {
+      this.logger.error(
+        this.chats,
+        `Error in removeUserFromChat, couldn't find ${chatId} chat`,
+      );
+      return null;
+    }
+    // TODO: replace check to id
+    const newChatUsersList = chat.users.filter(
+      // @ts-ignore
+      ({ name }) => name !== user.name,
+    );
+    return {
+      ...chat,
+      users: newChatUsersList,
       messages: this.messages[chatId],
     };
   }
