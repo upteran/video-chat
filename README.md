@@ -3,7 +3,6 @@
 
 ### roadmap
 
-#### text-chat
 - [] customize logger
 - add client errors handler
 - add multi chat support
@@ -13,7 +12,6 @@
 - [x] add: server message handlers
 - [x] remove: scss
 - [] add: video chat
-- [] remove tailwind ? 
 - [] add redis 
 - [] add docker
 - [] check blockchain ?

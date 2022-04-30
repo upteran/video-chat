@@ -8,7 +8,6 @@ import "./styles.css";
 
 export const MessagesView = () => {
   const messages = useStore($messagesList);
-  console.log("messages", messages);
   return (
     <div className="messages">
       {messages.map(({ text, messageId }: MessageType) => (

@@ -29,25 +29,19 @@ export const AddUser = () => {
   return (
     <>
       <div className="">
-        <p className="font-sans">Enter your nick:</p>
+        <p className="h2 mb-3.5">Enter your nick:</p>
       </div>
-      <div className="inputWrap">
+      <div className="inputWrap mb-2">
         <input
-          className={cx(
-            "msgInput rounded-sm border-gray-200 hover:border-gray-400",
-            {
-              error: error,
-            },
-          )}
+          className={cx("input", {
+            error: error,
+          })}
           type="text"
           value={value}
           onChange={onChange}
         />
       </div>
-      <button
-        className="group relative w-full flex justify-center align-middle py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-2.5 mt-3.5"
-        onClick={onClick}
-      >
+      <button className="button" onClick={onClick}>
         Send
       </button>
     </>

@@ -24,7 +24,7 @@ export const MessageInput = () => {
     <div className="">
       <div className="sendMessageWrapper ">
         <input
-          className="msgInputText"
+          className="input"
           type="text"
           value={value}
           onChange={onChange}

@@ -14,18 +14,21 @@ type MethodsType = {
   [key: string]: (data: any) => void;
 };
 
-const messageHandlers = (type: string, data: any) => {
+const messageHandlers = (type: string, data: any, ws: any) => {
   const methods: MethodsType = {
     createChat: (data) => {
       logger.info(`Handle create chat message`);
-      socketController.sendMsgToClients(data.payload.chatId, data);
+      socketController.checkChatExist(ws, data.payload.chatId);
       chatController.addChat(data.payload);
+      socketController.sendMsgToClients(data.payload.chatId, data);
     },
     connectChat: (data) => {
       const chatData = chatController.addUserToChat({
         chatId: data.payload.chatId,
         user: data.payload.user,
       });
+      if (!chatData) return;
+      socketController.checkChatExist(ws, data.payload.chatId);
       socketController.sendMsgToClients(data.payload.chatId, {
         ...data,
         payload: {
@@ -58,9 +61,7 @@ wss.on("connection", function connection(ws) {
     const parsed = JSON.parse(d);
     //@ts-ignore
     if (parsed?.payload?.chatId && ws?.clientId) {
-      //@ts-ignore
-      socketController.checkChatExist(ws, parsed?.payload?.chatId);
-      messageHandlers(parsed?.method, parsed);
+      messageHandlers(parsed?.method, parsed, ws);
     } else {
       // ws.send(JSON.stringify(data));
       logger.info(`Dead request`);
