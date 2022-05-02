@@ -14,4 +14,11 @@ export type ChatStateType = {
   isLoaded: boolean;
   isFetching: boolean;
   messages: Array<object>;
+  messagesInfoMap: null | {
+    [key: string]: {
+      id: string;
+      name: string;
+      color: string;
+    };
+  };
 };

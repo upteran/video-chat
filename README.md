@@ -3,9 +3,10 @@
 
 ### roadmap
 
-- [] customize logger
+- [x] customize logger
 - add client errors handler
 - add multi chat support
+- add tests
 - [x] add: create or find chat room
 - [] upd: refactor ws service (reconnect, diff client handlers)
 - [x] add: css styles
@@ -15,4 +16,5 @@
 - [] add redis 
 - [] add docker
 - [] check blockchain ?
+- [] add security auth
 

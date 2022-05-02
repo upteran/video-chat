@@ -10,6 +10,7 @@ type addChatMessageT = {
 
 export type MessageT = {
   payload: {
+    userId: string;
     messageId: string;
     message: string;
     chatId: string;

@@ -12,9 +12,11 @@ import {
   chatMsgReqBuilder,
 } from "./events";
 
-sendChatMessage.watch(({ message, chatId }) => {
-  // @ts-ignore
-  wsService.send(chatMsgReqBuilder({ message, chatId, messageId: nanoid() }));
+sendChatMessage.watch(({ message, chatId, userId }) => {
+  wsService.send(
+    // @ts-ignore
+    chatMsgReqBuilder({ message, chatId, messageId: nanoid(), userId }),
+  );
 });
 
 export const $messagesList = createStore<any>([]).on(

@@ -33,6 +33,23 @@ const initialState = {
   isLoaded: false,
   isFetching: false,
   messages: [],
+  messagesInfoMap: null,
+};
+
+const colorGenerate = () =>
+  "#" + parseInt(String(Math.random() * 0xffffff)).toString(16);
+
+const createUsersViewData = (users: Array<any>, oldState = {}) => {
+  return users.reduce((res, acc) => {
+    if (!res[acc.name]) {
+      res[acc.name] = {
+        id: acc.name,
+        name: acc.name,
+        color: colorGenerate(),
+      };
+    }
+    return res;
+  }, oldState);
 };
 
 export const $chatStore = createStore<ChatStateType>(initialState)
@@ -47,13 +64,14 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         isLoaded: true,
         isFetching: false,
         messages: [],
+        messagesInfoMap: createUsersViewData(payload.users),
       };
     },
   )
   .on(
     // @ts-ignore
     connectChatWsEvent,
-    ({ chat }, message: IWsMessage<IChatConnected>) => {
+    ({ chat, messagesInfoMap }, message: IWsMessage<IChatConnected>) => {
       const {
         payload: { chatId, users, messages },
       } = message;
@@ -65,13 +83,14 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         isLoaded: true,
         isFetching: false,
         messages,
+        messagesInfoMap: createUsersViewData(users),
       };
     },
   )
   .on(
     // @ts-ignore
     removeFromChatWsEvent,
-    ({ chat }, message: IWsMessage<IChatConnected>) => {
+    ({ chat, messagesInfoMap }, message: IWsMessage<IChatConnected>) => {
       const {
         payload: { chatId, users, messages },
       } = message;
@@ -83,21 +102,11 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         isLoaded: true,
         isFetching: false,
         messages,
+        messagesInfoMap,
       };
     },
   )
-  .on(
-    // @ts-ignore
-    closeChatWsEvent,
-    () => {
-      return {
-        chat: null,
-        isLoaded: false,
-        isFetching: false,
-        messages: [],
-      };
-    },
-  );
+  .reset(closeChatWsEvent);
 
 const persistChatData = (token: string) => {
   setCookie(null, "chatToken", token, {

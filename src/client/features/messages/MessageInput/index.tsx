@@ -3,11 +3,13 @@ import { useStore } from "effector-react";
 
 import { sendChatMessage } from "../store/events";
 import { $chatStore } from "../../chat/store";
+import { $userStore } from "../../user/store";
 
 import "./styles.css";
 
 export const MessageInput = () => {
   const { chat } = useStore($chatStore);
+  const { name } = useStore($userStore);
   const [value, setValue] = useState("");
   const onChange = (ev: any): void => {
     const { target } = ev;
@@ -16,7 +18,7 @@ export const MessageInput = () => {
 
   const onClick = async () => {
     if (!chat) return;
-    sendChatMessage({ message: value, chatId: chat.chatId });
+    sendChatMessage({ message: value, chatId: chat.chatId, userId: name });
     setValue("");
   };
 

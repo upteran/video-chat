@@ -3,6 +3,7 @@ import { IWsMessage } from "../../../services/ws/types";
 import { MessageT } from "../types";
 
 type sendMsgType = {
+  userId: string;
   message: string;
   chatId: string;
 };
