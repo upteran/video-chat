@@ -32,12 +32,16 @@ class ChatController {
     this.logger = logger;
   }
 
+  get chatList() {
+    return [...Array.from(this.chats.values())];
+  }
+
   addChat(data: addChatMessageT) {
     const { chatId, users } = data;
     this.chats.set(chatId, { chatId, users });
     this.logger.info(
-      this.chats,
-      `Process: add ${chatId} chat to list of chats`,
+      { chatList: this.chatList },
+      `Process: add ${chatId} chat to list of chats}`,
     );
     this.messages[chatId] = [];
   }
@@ -46,7 +50,7 @@ class ChatController {
     const chat = this.chats.get(chatId);
     if (!chat) {
       this.logger.error(
-        this.chats,
+        { chatList: this.chatList },
         `Error in addUserToChat, couldn't find ${chatId} chat`,
       );
       return null;
@@ -73,19 +77,18 @@ class ChatController {
     const chat = this.chats.get(chatId);
     if (!chat) {
       this.logger.error(
-        this.chats,
+        { chatList: this.chatList },
         `Error in removeUserFromChat, couldn't find ${chatId} chat`,
       );
       return null;
     }
     // TODO: replace check to id
-    const newChatUsersList = chat.users.filter(
+    chat.users = chat.users.filter(
       // @ts-ignore
       ({ name }) => name !== userName,
     );
     return {
       ...chat,
-      users: newChatUsersList,
       messages: this.messages[chatId],
     };
   }
@@ -100,7 +103,7 @@ class ChatController {
     const chat = this.chats.get(chatId);
     if (!chat) {
       this.logger.error(
-        this.chats,
+        { chatList: this.chatList },
         `Error in addMessageTo, couldn't find ${chatId} chat`,
       );
       return null;

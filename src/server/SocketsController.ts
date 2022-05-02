@@ -37,7 +37,7 @@ class SocketsController {
 
     this.sockets.delete(cid);
 
-    this.logger.info(this.socketsList, `List of active socket`);
+    this.logger.info({ list: this.socketsList }, `List of active socket`);
     // TODO: add new data format to able remove socketId from chatIdsToSocket
     // chat = chatIdsToSocket.get(); chat.removeSocket();
   }
@@ -56,7 +56,7 @@ class SocketsController {
     const listWithoutChat = this.chatIdsToSocket.get("none");
     listWithoutChat?.add(clientId);
 
-    this.logger.info(this.socketsList, `List of active socket`);
+    this.logger.info({ list: this.socketsList }, `List of active socket`);
   }
 
   checkChatExist(socket: CustomWebSocket, chatId: string) {
@@ -75,7 +75,10 @@ class SocketsController {
       }
       chatSet.add(socket.clientId);
       this.chatIdsToSocket.set(chatId, chatSet);
-      this.logger.info(chatSet, `Created chat sockets ids list`);
+      this.logger.info(
+        { socketList: [...Array.from(chatSet.values())] },
+        `Created chat sockets ids list`,
+      );
     }
   }
 
@@ -83,13 +86,16 @@ class SocketsController {
     const ids = this.chatIdsToSocket.get(chatId);
     if (!ids) {
       this.logger.info(
-        msg,
+        { message: msg },
         `Couldn't send message to any client, noa ${chatId} id`,
       );
       return;
     }
     for (const clientId of ids) {
-      this.logger.info(msg, `Send message to ${clientId} client`);
+      this.logger.info(
+        { requestMessage: msg },
+        `Send message to ${clientId} client`,
+      );
       // @ts-ignore
       const s = this.sockets.get(clientId);
       s?.socket.send(JSON.stringify(msg));

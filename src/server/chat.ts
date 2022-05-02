@@ -1,9 +1,7 @@
 import { WebSocketServer } from "ws";
-import pino from "pino";
 import { CustomWebSocket, socketController } from "./SocketsController";
 import { chatController } from "./ChatController";
-
-const logger = pino();
+import { logger } from "./logger";
 
 const wss = new WebSocketServer({ port: 8000 });
 
@@ -78,7 +76,6 @@ wss.on("connection", function connection(ws) {
   socketController.addSocket(ws);
 
   ws.on("message", function message(data) {
-    logger.info(`received: %s ${data}`);
     const d: any = data.toString();
     const parsed = JSON.parse(d);
     //@ts-ignore
