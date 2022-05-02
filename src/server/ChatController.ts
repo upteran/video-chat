@@ -3,15 +3,15 @@ interface IServerChat {
   users: Array<object>;
 }
 
-type addChatMessageType = {
+type addChatMessageT = {
   chatId: string;
   users: Array<object>;
 };
 
-export type MessageType = {
+export type MessageT = {
   payload: {
     messageId: string;
-    text: string;
+    message: string;
     chatId: string;
   };
 };
@@ -32,7 +32,7 @@ class ChatController {
     this.logger = logger;
   }
 
-  addChat(data: addChatMessageType) {
+  addChat(data: addChatMessageT) {
     const { chatId, users } = data;
     this.chats.set(chatId, { chatId, users });
     this.logger.info(
@@ -63,7 +63,13 @@ class ChatController {
     };
   }
 
-  removeUserFromChat({ chatId, user }: { chatId: string; user: object }): any {
+  removeUserFromChat({
+    chatId,
+    userName,
+  }: {
+    chatId: string;
+    userName: string;
+  }): any {
     const chat = this.chats.get(chatId);
     if (!chat) {
       this.logger.error(
@@ -75,7 +81,7 @@ class ChatController {
     // TODO: replace check to id
     const newChatUsersList = chat.users.filter(
       // @ts-ignore
-      ({ name }) => name !== user.name,
+      ({ name }) => name !== userName,
     );
     return {
       ...chat,
@@ -89,7 +95,7 @@ class ChatController {
     message,
   }: {
     chatId: string;
-    message: MessageType;
+    message: MessageT;
   }): IServerChat | null {
     const chat = this.chats.get(chatId);
     if (!chat) {

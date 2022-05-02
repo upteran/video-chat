@@ -1,15 +1,18 @@
 import { createWsApi } from "../../../services/ws";
-import { WsMessageType } from "../../../services/ws/types";
-import { MessageType } from "../types";
+import { IWsMessage } from "../../../services/ws/types";
+import { MessageT } from "../types";
 
 type sendMsgType = {
-  msg: string;
+  message: string;
   chatId: string;
 };
 
-const { ev: sendChatMessage, bridge: updateMessagesListWsEvent } = createWsApi<
-  sendMsgType,
-  WsMessageType<MessageType>
->("updateMessagesList");
+const {
+  ev: sendChatMessage,
+  bridge: updateMessagesListWsEvent,
+  wsMsgBuilder: chatMsgReqBuilder,
+} = createWsApi<sendMsgType, IWsMessage<MessageT>, IWsMessage<MessageT>>(
+  "updateMessagesList",
+);
 
-export { sendChatMessage, updateMessagesListWsEvent };
+export { sendChatMessage, updateMessagesListWsEvent, chatMsgReqBuilder };

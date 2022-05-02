@@ -1,7 +1,7 @@
-export type MessageType = {
+export type MessageT = {
   messageId: string;
-  text: string;
+  message: string;
   chatId: string;
 };
 
-export type MessagesList = Array<MessageType>;
+export type MessagesList = Array<MessageT>;

@@ -1,4 +1,4 @@
-export type WsMessageType<T> = {
+export type IWsMessage<T> = {
   id: string;
   method: string;
   payload: T;

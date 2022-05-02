@@ -1,37 +1,59 @@
 import { createWsApi } from "../../../services/ws";
-import { WsMessageType } from "../../../services/ws/types";
+import { IWsMessage } from "../../../services/ws/types";
 import { IChat, IChatConnected } from "../types";
+import { UserType } from "../../user/types";
 
-export type createEventType = {
+export type createChatET = {
   userName: string;
 };
 
-const { ev: createChat, bridge: createChatWsEvent } = createWsApi<
-  createEventType,
-  WsMessageType<IChat>
->("createChat");
+type createChatPayloadT = {
+  chatId: string;
+  users: Array<UserType>;
+};
 
-// TODO: rename type to some common name
-export type connectChatEventType = {
+const {
+  ev: createChat,
+  bridge: createChatWsEvent,
+  wsMsgBuilder: createChatReqBuilder,
+} = createWsApi<createChatET, IWsMessage<IChat>, createChatPayloadT>(
+  "createChat",
+);
+
+export type userChatET = {
   userName: string;
   chatId: string;
 };
 
-const { ev: connectChat, bridge: connectChatWsEvent } = createWsApi<
-  connectChatEventType,
-  WsMessageType<IChatConnected>
->("connectChat");
+export type userChatAddET = {
+  user: UserType;
+  chatId: string;
+};
 
-const { ev: removeFromChat, bridge: removeFromChatWsEvent } = createWsApi<
-  connectChatEventType,
-  WsMessageType<IChatConnected>
->("removeFromChat");
+const {
+  ev: connectChat,
+  bridge: connectChatWsEvent,
+  wsMsgBuilder: connectChatWsBuilder,
+} = createWsApi<userChatET, IWsMessage<IChatConnected>, userChatAddET>(
+  "connectChat",
+);
+
+const {
+  ev: removeFromChat,
+  bridge: removeFromChatWsEvent,
+  wsMsgBuilder: removeChatWsBuilder,
+} = createWsApi<userChatET, IWsMessage<IChatConnected>, userChatET>(
+  "removeFromChat",
+);
 
 export {
   createChat,
   createChatWsEvent,
+  createChatReqBuilder,
   connectChat,
   connectChatWsEvent,
+  connectChatWsBuilder,
   removeFromChat,
   removeFromChatWsEvent,
+  removeChatWsBuilder,
 };

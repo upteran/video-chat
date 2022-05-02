@@ -1,5 +1,5 @@
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
-import { WsMessageType } from "./types";
+import { IWsMessage } from "./types";
 
 interface WebSocketConfig {
   url: string;
@@ -31,7 +31,7 @@ export class WebSocketService {
       () => true,
     );
 
-    const sub = obs?.subscribe((msg: WsMessageType<any>): void => {
+    const sub = obs?.subscribe((msg: IWsMessage<any>): void => {
       this.req(msg);
     });
 
@@ -40,7 +40,7 @@ export class WebSocketService {
     };
   }
 
-  send(msg: WsMessageType<any>): void {
+  send(msg: IWsMessage<any>): void {
     this.socket?.next(msg);
     console.log("message res", msg);
   }
@@ -53,7 +53,7 @@ export class WebSocketService {
       () => {
         return `unsub ${name}`;
       },
-      (msg: WsMessageType<any>) => {
+      (msg: IWsMessage<any>) => {
         return msg.method === name;
       },
     );
@@ -67,7 +67,7 @@ export class WebSocketService {
     };
   };
 
-  req(msg: WsMessageType<any>): void {
+  req(msg: IWsMessage<any>): void {
     // console.log("message", msg);
   }
 }

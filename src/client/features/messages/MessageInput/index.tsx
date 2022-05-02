@@ -16,7 +16,7 @@ export const MessageInput = () => {
 
   const onClick = async () => {
     if (!chat) return;
-    sendChatMessage({ msg: value, chatId: chat.chatId });
+    sendChatMessage({ message: value, chatId: chat.chatId });
     setValue("");
   };
 

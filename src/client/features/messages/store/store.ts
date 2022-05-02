@@ -1,20 +1,25 @@
 import { createStore, sample } from "effector";
+import { nanoid } from "nanoid";
 
 import { wsService } from "../../../services/ws";
-import { WsMessageType } from "../../../services/ws/types";
-import { MessageType } from "../types";
+import { IWsMessage } from "../../../services/ws/types";
+import { MessageT } from "../types";
 
 import { connectChatWsEvent } from "../../chat/store/events";
-import { createMessage } from "./wsMessageBuilders";
-import { updateMessagesListWsEvent, sendChatMessage } from "./events";
+import {
+  updateMessagesListWsEvent,
+  sendChatMessage,
+  chatMsgReqBuilder,
+} from "./events";
 
-sendChatMessage.watch(({ msg, chatId }) => {
-  wsService.send(createMessage(msg, chatId));
+sendChatMessage.watch(({ message, chatId }) => {
+  // @ts-ignore
+  wsService.send(chatMsgReqBuilder({ message, chatId, messageId: nanoid() }));
 });
 
 export const $messagesList = createStore<any>([]).on(
   updateMessagesListWsEvent,
-  (list, result: WsMessageType<MessageType>) => {
+  (list, result: IWsMessage<MessageT>) => {
     return result?.payload ? [...list, result.payload] : [];
   },
 );

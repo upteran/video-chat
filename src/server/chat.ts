@@ -39,7 +39,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
     removeFromChat: (data) => {
       const chatData = chatController.removeUserFromChat({
         chatId: data.payload.chatId,
-        user: data.payload.user,
+        userName: data.payload.userName,
       });
       if (!chatData) return;
       socketController.checkChatExist(ws, data.payload.chatId);

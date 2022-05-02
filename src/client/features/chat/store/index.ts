@@ -4,21 +4,20 @@ import { nanoid } from "nanoid";
 
 // ws
 import { wsService } from "../../../services/ws";
-import { WsMessageType } from "../../../services/ws/types";
-import {
-  buildCreateChatMsg,
-  buildConnectChatMsg,
-  buildRemoveFromChatMsg,
-} from "./wsMsgBuilders";
+import { IWsMessage } from "../../../services/ws/types";
+
 import {
   createChatWsEvent,
   createChat,
+  createChatReqBuilder,
   connectChat,
   connectChatWsEvent,
-  connectChatEventType,
-  createEventType,
+  connectChatWsBuilder,
+  userChatET,
+  createChatET,
   removeFromChatWsEvent,
   removeFromChat,
+  removeChatWsBuilder,
 } from "./events";
 
 // chat
@@ -39,7 +38,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
   .on(
     // @ts-ignore
     createChatWsEvent,
-    ({ chat }, message: WsMessageType<IChat>) => {
+    ({ chat }, message: IWsMessage<IChat>) => {
       const { payload } = message;
 
       return {
@@ -53,7 +52,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
   .on(
     // @ts-ignore
     connectChatWsEvent,
-    ({ chat }, message: WsMessageType<IChatConnected>) => {
+    ({ chat }, message: IWsMessage<IChatConnected>) => {
       const {
         payload: { chatId, users, messages },
       } = message;
@@ -71,7 +70,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
   .on(
     // @ts-ignore
     removeFromChatWsEvent,
-    ({ chat }, message: WsMessageType<IChatConnected>) => {
+    ({ chat }, message: IWsMessage<IChatConnected>) => {
       const {
         payload: { chatId, users, messages },
       } = message;
@@ -108,24 +107,23 @@ removeFromChatWsEvent.watch(() => {
   destroyCookie(null, "chatToken");
 });
 
-createChat.watch(({ userName }: createEventType) => {
+createChat.watch(({ userName }: createChatET) => {
   const chatId = nanoid();
   const users = createUser(userName, chatId);
-  const msg = buildCreateChatMsg(chatId, [users]);
+  const msg = createChatReqBuilder({ chatId, users: [users] });
   // @ts-ignore
   wsService.send(msg);
 });
 
-connectChat.watch(({ userName, chatId }: connectChatEventType) => {
+connectChat.watch(({ userName, chatId }: userChatET) => {
   const user = createUser(userName, chatId);
-  const msg = buildConnectChatMsg(chatId, user);
+  const msg = connectChatWsBuilder({ chatId, user });
   // @ts-ignore
   wsService.send(msg);
 });
 
-removeFromChat.watch(({ userName, chatId }: connectChatEventType) => {
-  const user = createUser(userName, chatId);
-  const msg = buildRemoveFromChatMsg(chatId, user);
+removeFromChat.watch(({ userName, chatId }: userChatET) => {
+  const msg = removeChatWsBuilder({ chatId, userName });
   // @ts-ignore
   wsService.send(msg);
 });
