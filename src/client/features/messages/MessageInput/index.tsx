@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
 
+import { ReplyIcon } from "@heroicons/react/solid";
 import { sendChatMessage } from "../store/events";
 import { $chatStore } from "../../chat/store";
 import { $userStore } from "../../user/store";
@@ -32,7 +33,7 @@ export const MessageInput = () => {
           onChange={onChange}
         />
         <button className="sendMsgBtn" onClick={onClick}>
-          Send
+          <ReplyIcon className="h-6 w-6 text-blue-500" />
         </button>
       </div>
     </div>

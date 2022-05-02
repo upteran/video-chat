@@ -5,13 +5,7 @@
 
 .sendMsgBtn {
   position: absolute;
-  top: calc(50% - 12px);
   right: 35px;
-  transform: translateY(calc(-50% + 12px));
-  background: blue;
   color: white;
-  width: 35px;
-  height: 35px;
   border: none;
-  border-radius: 50%;
 }

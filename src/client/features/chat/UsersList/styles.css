@@ -1,8 +1,8 @@
 .userList {
+  display: none;
   background: #fff;
   border-right: 1px solid var(--border-color);
-  width: 320px;
-  //padding: 1.4em;
+  padding: 1.4em;
 }
 
 .userListLine {
@@ -22,4 +22,11 @@
   margin-right: 12px;
   border-radius: 50%;
   border: 1px solid;
+}
+
+@media (min-width: 780px) {
+  .userList {
+    display: block;
+    width: 320px;
+  }
 }
