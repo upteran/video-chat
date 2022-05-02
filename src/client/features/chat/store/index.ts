@@ -18,6 +18,7 @@ import {
   removeFromChatWsEvent,
   removeFromChat,
   removeChatWsBuilder,
+  closeChatWsEvent,
 } from "./events";
 
 // chat
@@ -84,6 +85,18 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         messages,
       };
     },
+  )
+  .on(
+    // @ts-ignore
+    closeChatWsEvent,
+    () => {
+      return {
+        chat: null,
+        isLoaded: false,
+        isFetching: false,
+        messages: [],
+      };
+    },
   );
 
 const persistChatData = (token: string) => {
@@ -103,7 +116,7 @@ connectChatWsEvent.watch((message) => {
   persistChatData(payload.chatId);
 });
 
-removeFromChatWsEvent.watch(() => {
+closeChatWsEvent.watch(() => {
   destroyCookie(null, "chatToken");
 });
 

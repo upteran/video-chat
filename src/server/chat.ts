@@ -49,6 +49,14 @@ const messageHandlers = (type: string, data: any, ws: any) => {
           ...chatData,
         },
       });
+      socketController.sendMsgToClient({
+        clientId: ws.clientId,
+        msg: {
+          id: "123",
+          method: "closeChat",
+          payload: {},
+        },
+      });
     },
     updateMessagesList: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data);

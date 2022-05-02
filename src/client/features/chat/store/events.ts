@@ -46,6 +46,12 @@ const {
   "removeFromChat",
 );
 
+const { bridge: closeChatWsEvent } = createWsApi<
+  undefined,
+  undefined,
+  undefined
+>("closeChat");
+
 export {
   createChat,
   createChatWsEvent,
@@ -56,4 +62,5 @@ export {
   removeFromChat,
   removeFromChatWsEvent,
   removeChatWsBuilder,
+  closeChatWsEvent,
 };

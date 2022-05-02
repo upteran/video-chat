@@ -95,6 +95,11 @@ class SocketsController {
       s?.socket.send(JSON.stringify(msg));
     }
   }
+
+  sendMsgToClient({ clientId, msg }: { clientId: string; msg: object }) {
+    const s = this.sockets.get(clientId);
+    s?.socket.send(JSON.stringify(msg));
+  }
 }
 
 export const socketController = new SocketsController();
