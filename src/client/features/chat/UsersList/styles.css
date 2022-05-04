@@ -5,6 +5,10 @@
   padding: 1.4em;
 }
 
+.showMobile {
+  display: block;
+}
+
 .userListLine {
   display: flex;
   justify-content: flex-start;
