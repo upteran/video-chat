@@ -1,70 +1,68 @@
-/* eslint-disable */
 const conf = {
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-  configuration: {
-    offerToReceiveAudio: true,
-    offerToReceiveVideo: true,
-  },
 };
 
 // TODO: add types
 export class PeerConnectService {
-  peerConnection: any;
+  peerConnection: null | RTCPeerConnection;
   config: any;
   iceSend: boolean;
-  candidateQueue: Array<any>;
-  iceCb: any;
-  // signalingChannel: any;
+  candidateQueue: Array<RTCIceCandidateInit>;
+  onConnect: ((ev: any) => void) | null;
 
   constructor(config: any) {
     this.config = config;
     this.peerConnection = null;
     this.iceSend = false;
     this.candidateQueue = [];
-    this.iceCb = null;
+    this.onConnect = null;
   }
 
   get isInit() {
     return !!this.peerConnection;
   }
 
-  init(connectCb: any, iceCb: any) {
+  init(onConnect: any) {
     // this.config use
     this.peerConnection = new RTCPeerConnection(conf);
+    this.onConnect = onConnect;
     // this.peerConnection.addTrack(MediaStreamTrack);
-    this.iceCb = iceCb;
-    this.msgLocalICEHandler(iceCb);
-    this.connectionStatusListener(connectCb);
+    this.msgLocalICEHandler();
+    this.connectionStatusListener();
   }
 
-  connectionStatusListener = (cb: (arg: any) => void) => {
+  connectionStatusListener = () => {
+    if (!this.peerConnection) {
+      throw new Error("peerConnection must be init");
+    }
     this.peerConnection.addEventListener(
       "connectionstatechange",
       (event: any) => {
-        if (this.peerConnection.connectionState === "connected") {
+        if (this.peerConnection?.connectionState === "connected") {
           console.log("Connection establish!");
-          cb(event);
+          this.onConnect && this.onConnect(event);
         }
       },
     );
   };
 
-  msgLocalICEHandler = (iceCb: any) => {
+  msgLocalICEHandler = () => {
+    if (!this.peerConnection) {
+      throw new Error("peerConnection must be init");
+    }
     this.peerConnection.addEventListener("icecandidate", (event: any) => {
       if (event.candidate && !this.iceSend) {
         this.iceSend = true;
-        if (!this.peerConnection.remoteDescription) {
-          this.candidateQueue.push(event.candidate);
-          console.log("Add to queue candidate ICE!");
-        } else {
-          iceCb(event.candidate);
-          console.log("Send candidate ICE!");
-        }
+        this.candidateQueue.push(event.candidate);
+        console.log("Add to queue candidate ICE!");
       }
     });
   };
 
-  msgICEHandler = async (message: any) => {
+  msgICEHandler = async (message: RTCIceCandidate) => {
+    if (!this.peerConnection) {
+      throw new Error("peerConnection must be init");
+    }
     if (message) {
       try {
         console.log("inner", message);
@@ -75,37 +73,51 @@ export class PeerConnectService {
     }
   };
 
-  async getOffer(cb: any): Promise<any> {
+  async getOffer(onSuccess: any): Promise<any> {
+    if (!this.peerConnection) {
+      throw new Error("peerConnection must be init");
+    }
     this.peerConnection
       .createOffer()
-      .then((offer: any) => {
-        this.peerConnection.setLocalDescription(offer);
+      .then((offer: RTCSessionDescriptionInit) => {
+        this.peerConnection?.setLocalDescription(offer);
         return offer;
       })
-      .then((offer: any) => {
-        cb(offer);
+      .then((offer: RTCSessionDescriptionInit) => {
+        onSuccess(offer);
       });
   }
 
-  async handleOffer(offer: any, cb: any): Promise<any> {
-    this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+  async handleOffer(
+    offer: RTCSessionDescription,
+    onSuccess: any,
+  ): Promise<any> {
+    if (!this.peerConnection) {
+      throw new Error("peerConnection must be init");
+    }
+    await this.peerConnection.setRemoteDescription(
+      new RTCSessionDescription(offer),
+    );
     let answer;
     this.peerConnection
       .createAnswer()
       .then((answerRes: any) => {
         answer = answerRes;
         alert(answer);
-        this.peerConnection.setLocalDescription(answerRes);
+        this.peerConnection?.setLocalDescription(answerRes);
         return answer;
       })
       .then((answer: any) => {
-        cb(answer);
+        onSuccess(answer);
       });
   }
 
-  async handlerAnswer(answer: any) {
+  async handlerAnswer(answer: any, onSuccess: any) {
+    if (!this.peerConnection) {
+      throw new Error("peerConnection must be init");
+    }
     const rTCSession = new RTCSessionDescription(answer);
     await this.peerConnection.setRemoteDescription(rTCSession);
-    this.iceCb(this.candidateQueue[0]);
+    onSuccess(this.candidateQueue[0]);
   }
 }

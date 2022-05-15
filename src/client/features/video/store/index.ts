@@ -2,15 +2,15 @@ import { createEvent, createStore, sample } from "effector";
 import { wsService, createWsApi } from "../../../services/ws";
 import { IWsMessage } from "../../../services/ws/types";
 import { PeerConnectService } from "../services/PeerConnectService";
-// import { MediaHandlerService } from "../services/MediaHandlerService";
+import { MediaHandlerService } from "../services/MediaHandlerService";
 // import { VCController } from "../services/VCController";
 
-type startVideoChatMsgT = {
+type peerConnectMsgT = {
   offer?: any;
   answer?: any;
   candidate?: any;
-  destinationUserId: string;
-  sourceUserId: string;
+  // destinationUserId: string;
+  // sourceUserId: string;
   chatId: string;
 };
 
@@ -21,8 +21,8 @@ type startVideoChatET = {
 };
 
 type VideoStore = {
-  sourceUserId: null | string;
-  destinationUserId: null | string;
+  // sourceUserId: null | string;
+  // destinationUserId: null | string;
   chatId: null | string;
   isActive: boolean;
   offerAccepted: boolean;
@@ -33,29 +33,28 @@ const {
   ev: starVideoChat,
   bridge: starVideoChatWsEvent,
   wsMsgBuilder: starVideoChatReqBuilder,
-} = createWsApi<startVideoChatET, IWsMessage<any>, startVideoChatMsgT>(
+} = createWsApi<startVideoChatET, IWsMessage<peerConnectMsgT>, peerConnectMsgT>(
   "startVideoChat",
 );
 
-const {
-  ev: iceCandidateEvent,
-  bridge: iceCandidateWsEvent,
-  wsMsgBuilder: iceCandidateReqBuilder,
-} = createWsApi<any, any, startVideoChatMsgT>("iceCandidate");
+const { bridge: iceCandidateWsEvent, wsMsgBuilder: iceCandidateReqBuilder } =
+  createWsApi<any, IWsMessage<peerConnectMsgT>, peerConnectMsgT>(
+    "iceCandidate",
+  );
 
 const connectedPeerEvent = createEvent("connectedPeer");
 
-const peerConnectService = new PeerConnectService({});
+const peerConnectService = new PeerConnectService({ signalService: wsService });
 const initServiceOnVideoStart = () => {
   if (!peerConnectService.isInit) {
-    peerConnectService.init(connectedPeerEvent, iceCandidateEvent);
+    peerConnectService.init(connectedPeerEvent);
   }
 };
 // const mediaService = new MediaHandlerService();
 
 const initialState = {
-  sourceUserId: null,
-  destinationUserId: null,
+  // sourceUserId: null,
+  // destinationUserId: null,
   chatId: null,
   isActive: false,
   offerAccepted: false,
@@ -64,10 +63,9 @@ const initialState = {
 
 const $videoChatStore = createStore<VideoStore>(initialState)
   // @ts-ignore
-  .on(starVideoChat, (store, { destinationUserId, chatId }) => {
+  .on(starVideoChat, (store, { chatId }) => {
     return {
       ...store,
-      destinationUserId,
       chatId,
       awaitConnect: true,
     };
@@ -83,7 +81,6 @@ const $videoChatStore = createStore<VideoStore>(initialState)
     if (result.payload.offer) {
       return {
         ...store,
-        destinationUserId: result.payload.sourcedUserId,
         awaitConnect: true,
         offerAccepted: true,
       };
@@ -100,64 +97,49 @@ const $videoChatStore = createStore<VideoStore>(initialState)
   });
 
 // @ts-ignore
-starVideoChat.watch(async ({ destinationUserId, chatId, sourceUserId }) => {
+starVideoChat.watch(async ({ chatId }) => {
   initServiceOnVideoStart();
-  await peerConnectService.getOffer((offer: any) =>
+  await peerConnectService.getOffer((offer: RTCOfferOptions) =>
     wsService.send(
       starVideoChatReqBuilder({
         offer,
-        destinationUserId,
         chatId,
-        sourceUserId,
       }),
     ),
   );
 });
 
-starVideoChatWsEvent.watch(async (res) => {
+// return offer/answer
+starVideoChatWsEvent.watch(async ({ payload }) => {
   initServiceOnVideoStart();
 
-  if (res.payload.answer) {
-    await peerConnectService.handlerAnswer(res.payload.answer);
+  if (payload.answer) {
+    await peerConnectService.handlerAnswer(payload.answer, (candidate: any) =>
+      wsService.send(
+        iceCandidateReqBuilder({
+          candidate,
+          // @ts-ignore
+          chatId: payload.chatId,
+        }),
+      ),
+    );
   }
 
-  if (res.payload.offer) {
-    await peerConnectService.handleOffer(res.payload.offer, (answer: any) =>
+  if (payload.offer) {
+    await peerConnectService.handleOffer(payload.offer, (answer: any) =>
       wsService.send(
         starVideoChatReqBuilder({
           answer,
-          destinationUserId: res.payload.sourceUserId,
-          chatId: res.payload.chatId,
-          sourceUserId: res.payload.destinationUserId,
+          chatId: payload.chatId,
         }),
       ),
     );
   }
 });
 
-sample({
-  source: $videoChatStore,
-  clock: iceCandidateEvent,
-  fn: (store, candidate) => {
-    const { destinationUserId, chatId, sourceUserId } = store;
-    console.log("iceCandidateEvent call");
-    wsService.send(
-      iceCandidateReqBuilder({
-        candidate: candidate,
-        // @ts-ignore
-        destinationUserId,
-        // @ts-ignore
-        chatId,
-        // @ts-ignore
-        sourceUserId,
-      }),
-    );
-  },
-});
-
-iceCandidateWsEvent.watch(async (message) => {
-  console.log("Get candidate message", message);
-  await peerConnectService.msgICEHandler(message.payload.candidate);
+iceCandidateWsEvent.watch(async ({ payload }) => {
+  console.log("Get candidate message", payload);
+  await peerConnectService.msgICEHandler(payload.candidate);
 });
 
 connectedPeerEvent.watch(() => {

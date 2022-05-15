@@ -11,7 +11,7 @@ type MediaType = "audiooutput" | "audiooutput" | "audioinput" | "videoinput";
 
 const config = { video: true, audio: true };
 
-class MediaHandlerService {
+export class MediaHandlerService {
   video: boolean;
   audio: boolean;
 
