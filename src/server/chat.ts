@@ -18,7 +18,10 @@ const messageHandlers = (type: string, data: any, ws: any) => {
       logger.info(`Handle create chat message`);
       socketController.checkChatExist(ws, data.payload.chatId);
       chatController.addChat(data.payload);
-      socketController.sendMsgToClients(data.payload.chatId, data);
+      socketController.sendMsgToClients(data.payload.chatId, data, {
+        toSelf: true,
+        currWsId: ws.clientId,
+      });
     },
     connectChat: (data) => {
       const chatData = chatController.addUserToChat({
@@ -27,12 +30,16 @@ const messageHandlers = (type: string, data: any, ws: any) => {
       });
       if (!chatData) return;
       socketController.checkChatExist(ws, data.payload.chatId);
-      socketController.sendMsgToClients(data.payload.chatId, {
-        ...data,
-        payload: {
-          ...chatData,
+      socketController.sendMsgToClients(
+        data.payload.chatId,
+        {
+          ...data,
+          payload: {
+            ...chatData,
+          },
         },
-      });
+        { toSelf: true, currWsId: ws.clientId },
+      );
     },
     removeFromChat: (data) => {
       const chatData = chatController.removeUserFromChat({
@@ -41,12 +48,16 @@ const messageHandlers = (type: string, data: any, ws: any) => {
       });
       if (!chatData) return;
       socketController.checkChatExist(ws, data.payload.chatId);
-      socketController.sendMsgToClients(data.payload.chatId, {
-        ...data,
-        payload: {
-          ...chatData,
+      socketController.sendMsgToClients(
+        data.payload.chatId,
+        {
+          ...data,
+          payload: {
+            ...chatData,
+          },
         },
-      });
+        { toSelf: true, currWsId: ws.clientId },
+      );
       socketController.sendMsgToClient({
         clientId: ws.clientId,
         msg: {
@@ -57,14 +68,32 @@ const messageHandlers = (type: string, data: any, ws: any) => {
       });
     },
     updateMessagesList: (data) => {
-      socketController.sendMsgToClients(data.payload.chatId, data);
+      socketController.sendMsgToClients(data.payload.chatId, data, {
+        toSelf: true,
+        currWsId: ws.clientId,
+      });
       chatController.addMessageTo({
         chatId: data.payload.chatId,
         message: data,
       });
     },
+    startVideoChat: (data) => {
+      socketController.sendMsgToClients(data.payload.chatId, data, {
+        toSelf: false,
+        currWsId: ws.clientId,
+      });
+    },
+    iceCandidate: (data) => {
+      socketController.sendMsgToClients(data.payload.chatId, data, {
+        toSelf: false,
+        currWsId: ws.clientId,
+      });
+    },
     defaultAction: (data) => {
-      socketController.sendMsgToClients(data.payload.chatId, data);
+      socketController.sendMsgToClients(data.payload.chatId, data, {
+        toSelf: true,
+        currWsId: ws.clientId,
+      });
     },
   };
 

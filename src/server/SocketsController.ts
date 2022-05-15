@@ -82,7 +82,11 @@ class SocketsController {
     }
   }
 
-  sendMsgToClients(chatId: string, msg: any) {
+  sendMsgToClients(
+    chatId: string,
+    msg: any,
+    { toSelf, currWsId }: { toSelf: boolean; currWsId: string },
+  ) {
     const ids = this.chatIdsToSocket.get(chatId);
     if (!ids) {
       this.logger.info(
@@ -96,9 +100,12 @@ class SocketsController {
         { requestMessage: msg },
         `Send message to ${clientId} client`,
       );
-      // @ts-ignore
-      const s = this.sockets.get(clientId);
-      s?.socket.send(JSON.stringify(msg));
+
+      if (toSelf || (!toSelf && currWsId !== clientId)) {
+        // @ts-ignore
+        const s = this.sockets.get(clientId);
+        s?.socket.send(JSON.stringify(msg));
+      }
     }
   }
 

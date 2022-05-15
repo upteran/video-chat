@@ -1,0 +1,17 @@
+.videoRoomOuter {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background:rgba(0, 0, 0, .7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.videoRoomInner {
+    width: 400px;
+    height: 700px;
+    border-radius: 4px;
+    background: #fff;
+}

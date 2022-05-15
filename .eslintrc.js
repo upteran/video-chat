@@ -24,4 +24,7 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": ["off"],
     indent: ["error", 2],
   },
+  globals: {
+    SignalingChannel: true,
+  },
 };

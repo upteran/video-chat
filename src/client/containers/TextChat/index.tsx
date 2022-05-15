@@ -12,6 +12,8 @@ import { XIcon, UserIcon } from "@heroicons/react/solid";
 import { $chatStore } from "../../features/chat/store";
 import { removeFromChat } from "../../features/chat/store/events";
 import { $userStore } from "../../features/user/store";
+import { Room, starVideoChat } from "../../features/video";
+import { $videoChatStore } from "../../features/video/store";
 
 import { LogIn } from "../../process/logIn";
 
@@ -19,8 +21,19 @@ import "./styles.css";
 
 export const Chat = () => {
   const { isLoaded, chat } = useStore($chatStore);
+  const { awaitConnect, isActive } = useStore($videoChatStore);
   const { name } = useStore($userStore);
   const [mobileVisible, setMobileVisible] = useState(false);
+
+  const onVideoStart = (userId: string) => {
+    if (!chat?.chatId) return;
+    console.log("video start");
+    starVideoChat({
+      destinationUserId: userId,
+      chatId: chat.chatId,
+      sourceUserId: name,
+    });
+  };
   const onExitChat = () => {
     if (!chat?.chatId) return;
     removeFromChat({ userName: name, chatId: chat.chatId });
@@ -36,8 +49,10 @@ export const Chat = () => {
       console.log(err);
     }
   };
+
   return (
     <div className="">
+      {(awaitConnect || isActive) && <Room />}
       <div className="wrap">
         {isLoaded ? (
           <div className="chatOuter">
@@ -59,7 +74,10 @@ export const Chat = () => {
               </button>
             </div>
             <div className="chat">
-              <UsersList isMobileVisible={mobileVisible} />
+              <UsersList
+                isMobileVisible={mobileVisible}
+                onVideoStart={onVideoStart}
+              />
               <div className="chatInner">
                 <MessagesView />
                 <MessageInput />
