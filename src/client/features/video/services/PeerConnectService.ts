@@ -9,6 +9,7 @@ export class PeerConnectService {
   iceSend: boolean;
   candidateQueue: Array<RTCIceCandidateInit>;
   onConnect: ((ev: any) => void) | null;
+  mediaService: any;
 
   constructor(config: any) {
     this.config = config;
@@ -16,19 +17,34 @@ export class PeerConnectService {
     this.iceSend = false;
     this.candidateQueue = [];
     this.onConnect = null;
+    this.mediaService = config.mediaService;
   }
 
   get isInit() {
     return !!this.peerConnection;
   }
 
-  init(onConnect: any) {
+  async init({ onConnect }: any) {
     // this.config use
     this.peerConnection = new RTCPeerConnection(conf);
     this.onConnect = onConnect;
-    // this.peerConnection.addTrack(MediaStreamTrack);
+
+    await this.addStreamToConnect();
+
     this.msgLocalICEHandler();
     this.connectionStatusListener();
+  }
+
+  async addStreamToConnect() {
+    const stream = await this.mediaService.getMediaStream();
+    stream.getTracks().forEach((track: any) => {
+      this.peerConnection?.addTrack(track, stream);
+    });
+
+    this.peerConnection?.addEventListener("track", async (event) => {
+      const [remoteStream] = event.streams;
+      this.mediaService.streamEl.srcObject = remoteStream;
+    });
   }
 
   connectionStatusListener = () => {
@@ -103,7 +119,6 @@ export class PeerConnectService {
       .createAnswer()
       .then((answerRes: any) => {
         answer = answerRes;
-        alert(answer);
         this.peerConnection?.setLocalDescription(answerRes);
         return answer;
       })

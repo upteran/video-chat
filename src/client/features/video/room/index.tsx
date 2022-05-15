@@ -11,7 +11,9 @@ export const Room = () => {
   // console.log("cameras", cameras);
   return (
     <div className="videoRoomOuter">
-      <div className="videoRoomInner">Hello room</div>
+      <div className="videoRoomInner">
+        <video id="localVideo" playsInline autoPlay muted />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,16 @@
 /* eslint-disable */
-type MediaStreamConfig = { video: boolean; audio: boolean };
+interface IMediaHandlerService {
+  media: {
+    video: boolean;
+    audio: boolean;
+  };
+  streamWindow: HTMLElement | null;
+}
+
+type MediaStreamConfig = {
+  video: boolean;
+  audio: boolean;
+};
 
 type CameraConfig = {
   cameraId: string;
@@ -14,14 +25,25 @@ const config = { video: true, audio: true };
 export class MediaHandlerService {
   video: boolean;
   audio: boolean;
+  streamWindow: HTMLElement | null;
 
-  constructor({ video, audio }: MediaStreamConfig) {
+  constructor({ media: { video, audio }, streamWindow }: IMediaHandlerService) {
     this.video = video;
     this.audio = audio;
+    this.streamWindow = streamWindow;
+  }
+
+  get streamEl() {
+    return this.streamWindow;
   }
 
   openMediaDevices = async (constraints: MediaStreamConfig) => {
-    return await navigator.mediaDevices.getUserMedia(constraints);
+    try {
+      const x = await navigator.mediaDevices.getUserMedia(constraints);
+      return x;
+    } catch (e: any) {
+      throw new Error("Media stream get error, check permissions", e);
+    }
   };
 
   getConnectedDevices = async (type: MediaType) => {
@@ -36,6 +58,7 @@ export class MediaHandlerService {
         audio: this.audio,
       });
       console.log("Got MediaStream:", stream);
+      return stream;
     } catch (error) {
       console.error("Error accessing media devices.", error);
     }

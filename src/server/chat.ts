@@ -1,9 +1,16 @@
+import { createServer } from "https";
+import { readFileSync } from "fs";
 import { WebSocketServer } from "ws";
 import { CustomWebSocket, socketController } from "./SocketsController";
 import { chatController } from "./ChatController";
 import { logger } from "./logger";
 
-const wss = new WebSocketServer({ port: 8000 });
+const server = createServer({
+  cert: readFileSync("./cert.pem"),
+  key: readFileSync("./cert-key.pem"),
+});
+
+const wss = new WebSocketServer({ server });
 
 socketController.initLogger(logger);
 chatController.initLogger(logger);
@@ -77,7 +84,13 @@ const messageHandlers = (type: string, data: any, ws: any) => {
         message: data,
       });
     },
-    connectPeers: (data) => {
+    startVideoChat: (data) => {
+      socketController.sendMsgToClients(data.payload.chatId, data, {
+        toSelf: false,
+        currWsId: ws.clientId,
+      });
+    },
+    iceCandidate: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data, {
         toSelf: false,
         currWsId: ws.clientId,
@@ -126,3 +139,5 @@ wss.on("error", (err) => {
 wss.on("close", (msg: any) => {
   console.log("close", msg);
 });
+
+server.listen(8000);

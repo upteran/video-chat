@@ -1,60 +1,24 @@
-import { createEvent, createStore, sample } from "effector";
-import { wsService, createWsApi } from "../../../services/ws";
+import { createStore } from "effector";
+import { wsService } from "../../../services/ws";
 import { IWsMessage } from "../../../services/ws/types";
-import { PeerConnectService } from "../services/PeerConnectService";
-import { MediaHandlerService } from "../services/MediaHandlerService";
-// import { VCController } from "../services/VCController";
-
-type peerConnectMsgT = {
-  offer?: any;
-  answer?: any;
-  candidate?: any;
-  // destinationUserId: string;
-  // sourceUserId: string;
-  chatId: string;
-};
-
-type startVideoChatET = {
-  destinationUserId: string;
-  sourceUserId: string;
-  chatId: string;
-};
+import { peerConnectService, initServiceOnVideoStart } from "../services";
+import {
+  starVideoChatReqBuilder,
+  iceCandidateReqBuilder,
+  iceCandidateWsEvent,
+  starVideoChatWsEvent,
+  connectedPeerEvent,
+  starVideoChat,
+} from "./events";
 
 type VideoStore = {
-  // sourceUserId: null | string;
-  // destinationUserId: null | string;
   chatId: null | string;
   isActive: boolean;
   offerAccepted: boolean;
   awaitConnect: boolean;
 };
 
-const {
-  ev: starVideoChat,
-  bridge: starVideoChatWsEvent,
-  wsMsgBuilder: starVideoChatReqBuilder,
-} = createWsApi<startVideoChatET, IWsMessage<peerConnectMsgT>, peerConnectMsgT>(
-  "startVideoChat",
-);
-
-const { bridge: iceCandidateWsEvent, wsMsgBuilder: iceCandidateReqBuilder } =
-  createWsApi<any, IWsMessage<peerConnectMsgT>, peerConnectMsgT>(
-    "iceCandidate",
-  );
-
-const connectedPeerEvent = createEvent("connectedPeer");
-
-const peerConnectService = new PeerConnectService({ signalService: wsService });
-const initServiceOnVideoStart = () => {
-  if (!peerConnectService.isInit) {
-    peerConnectService.init(connectedPeerEvent);
-  }
-};
-// const mediaService = new MediaHandlerService();
-
 const initialState = {
-  // sourceUserId: null,
-  // destinationUserId: null,
   chatId: null,
   isActive: false,
   offerAccepted: false,
@@ -96,7 +60,7 @@ const $videoChatStore = createStore<VideoStore>(initialState)
     };
   });
 
-// @ts-ignore
+// send offer
 starVideoChat.watch(async ({ chatId }) => {
   initServiceOnVideoStart();
   await peerConnectService.getOffer((offer: RTCOfferOptions) =>
@@ -137,6 +101,7 @@ starVideoChatWsEvent.watch(async ({ payload }) => {
   }
 });
 
+// get ice data
 iceCandidateWsEvent.watch(async ({ payload }) => {
   console.log("Get candidate message", payload);
   await peerConnectService.msgICEHandler(payload.candidate);
@@ -144,7 +109,6 @@ iceCandidateWsEvent.watch(async ({ payload }) => {
 
 connectedPeerEvent.watch(() => {
   console.log("Connected");
-  // after connect event
 });
 
 export { starVideoChat, $videoChatStore };

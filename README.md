@@ -17,4 +17,5 @@
 - [] add docker
 - [] check blockchain ?
 - [] add security auth
+- [] remove users ws streams on exit
 
