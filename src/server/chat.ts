@@ -84,13 +84,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
         message: data,
       });
     },
-    startVideoChat: (data) => {
-      socketController.sendMsgToClients(data.payload.chatId, data, {
-        toSelf: false,
-        currWsId: ws.clientId,
-      });
-    },
-    iceCandidate: (data) => {
+    peerEvents: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data, {
         toSelf: false,
         currWsId: ws.clientId,

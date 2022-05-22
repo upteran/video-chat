@@ -1,52 +1,56 @@
 import { createStore } from "effector";
 import { wsService } from "../../../services/ws";
 import { IWsMessage } from "../../../services/ws/types";
-import { peerConnectService, initServiceOnVideoStart } from "../services";
+import { peerConnectService } from "../services";
 import {
-  starVideoChatReqBuilder,
-  iceCandidateReqBuilder,
-  iceCandidateWsEvent,
-  starVideoChatWsEvent,
+  peerEventsMsgBuilder,
+  peerEventsBridge,
   connectedPeerEvent,
-  starVideoChat,
+  sendPeerOffer,
+  openVideoEvent,
+  sendPeerAnswer,
 } from "./events";
 
 type VideoStore = {
   chatId: null | string;
   isActive: boolean;
-  offerAccepted: boolean;
   awaitConnect: boolean;
+  answer: any;
+  offer: any;
+  isHost: boolean;
 };
 
 const initialState = {
   chatId: null,
   isActive: false,
-  offerAccepted: false,
   awaitConnect: false,
+  offer: null,
+  answer: null,
+  isHost: false,
 };
 
 const $videoChatStore = createStore<VideoStore>(initialState)
-  // @ts-ignore
-  .on(starVideoChat, (store, { chatId }) => {
+  .on(openVideoEvent, (store, { chatId }) => {
     return {
       ...store,
       chatId,
       awaitConnect: true,
+      isHost: true,
     };
   })
-  .on(starVideoChatWsEvent, (store, result: IWsMessage<any>) => {
+  .on(peerEventsBridge, (store, result: IWsMessage<any>) => {
     if (result.payload.answer) {
       return {
         ...store,
-        awaitConnect: true,
-        offerAccepted: true,
+        answer: result.payload.answer,
       };
     }
     if (result.payload.offer) {
       return {
         ...store,
+        chatId: result.payload.chatId,
+        offer: result.payload.offer,
         awaitConnect: true,
-        offerAccepted: true,
       };
     }
     return store;
@@ -55,17 +59,15 @@ const $videoChatStore = createStore<VideoStore>(initialState)
     return {
       ...store,
       awaitConnect: false,
-      offerAccepted: true,
       isActive: true,
     };
   });
 
-// send offer
-starVideoChat.watch(async ({ chatId }) => {
-  initServiceOnVideoStart();
-  await peerConnectService.getOffer((offer: RTCOfferOptions) =>
+// send offer / init rtc service
+sendPeerOffer.watch(async ({ chatId }) => {
+  await peerConnectService.createOffer((offer: RTCOfferOptions) =>
     wsService.send(
-      starVideoChatReqBuilder({
+      peerEventsMsgBuilder({
         offer,
         chatId,
       }),
@@ -73,42 +75,38 @@ starVideoChat.watch(async ({ chatId }) => {
   );
 });
 
-// return offer/answer
-starVideoChatWsEvent.watch(async ({ payload }) => {
-  initServiceOnVideoStart();
+sendPeerAnswer.watch(async ({ offer, chatId }) => {
+  await peerConnectService.offerHandler(offer, (answer: any) =>
+    wsService.send(
+      peerEventsMsgBuilder({
+        answer,
+        chatId,
+      }),
+    ),
+  );
+});
 
+// handle offer and candidate message / init rtc service
+peerEventsBridge.watch(async ({ payload }) => {
   if (payload.answer) {
     await peerConnectService.handlerAnswer(payload.answer, (candidate: any) =>
       wsService.send(
-        iceCandidateReqBuilder({
+        peerEventsMsgBuilder({
           candidate,
-          // @ts-ignore
           chatId: payload.chatId,
         }),
       ),
     );
   }
 
-  if (payload.offer) {
-    await peerConnectService.handleOffer(payload.offer, (answer: any) =>
-      wsService.send(
-        starVideoChatReqBuilder({
-          answer,
-          chatId: payload.chatId,
-        }),
-      ),
-    );
+  // get ice data
+  if (payload.candidate) {
+    await peerConnectService.candidateMsgHandler(payload.candidate);
   }
-});
-
-// get ice data
-iceCandidateWsEvent.watch(async ({ payload }) => {
-  console.log("Get candidate message", payload);
-  await peerConnectService.msgICEHandler(payload.candidate);
 });
 
 connectedPeerEvent.watch(() => {
   console.log("Connected");
 });
 
-export { starVideoChat, $videoChatStore };
+export { $videoChatStore, sendPeerOffer, openVideoEvent, sendPeerAnswer };

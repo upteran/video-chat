@@ -1,6 +1,5 @@
 import { MediaHandlerService } from "./MediaHandlerService";
 import { PeerConnectService } from "./PeerConnectService";
-import { wsService } from "../../../services/ws";
 import { connectedPeerEvent } from "../store/events";
 
 const mediaService = new MediaHandlerService({
@@ -8,20 +7,20 @@ const mediaService = new MediaHandlerService({
     video: true,
     audio: true,
   },
-  streamWindow: document.getElementById("video"),
 });
 
-const peerConnectService = new PeerConnectService({
-  signalService: wsService,
-  mediaService,
-});
+const peerConnectService = new PeerConnectService({});
 
-const initServiceOnVideoStart = () => {
-  if (!peerConnectService.isInit) {
-    peerConnectService.init({
-      onConnect: connectedPeerEvent,
-    });
-  }
+// init must be after DOM load
+const initServiceOnVideoStart = async (local: any, remote: any) => {
+  mediaService.initOutput({
+    local,
+    remote,
+  });
+  peerConnectService.init({
+    onConnect: connectedPeerEvent,
+    mediaService,
+  });
 };
 
 export { initServiceOnVideoStart, peerConnectService };

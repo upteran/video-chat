@@ -1,3 +1,3 @@
 export { Room } from "./room";
 
-export { starVideoChat } from "./store";
+export { sendPeerOffer, sendPeerAnswer } from "./store";

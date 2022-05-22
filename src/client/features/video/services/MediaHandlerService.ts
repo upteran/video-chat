@@ -4,7 +4,6 @@ interface IMediaHandlerService {
     video: boolean;
     audio: boolean;
   };
-  streamWindow: HTMLElement | null;
 }
 
 type MediaStreamConfig = {
@@ -25,16 +24,26 @@ const config = { video: true, audio: true };
 export class MediaHandlerService {
   video: boolean;
   audio: boolean;
-  streamWindow: HTMLElement | null;
+  remoteContainer: HTMLVideoElement | null;
+  localContainer: HTMLVideoElement | null;
 
-  constructor({ media: { video, audio }, streamWindow }: IMediaHandlerService) {
+  constructor({ media: { video, audio } }: IMediaHandlerService) {
     this.video = video;
     this.audio = audio;
-    this.streamWindow = streamWindow;
+    this.remoteContainer = null;
+    this.localContainer = null;
   }
 
-  get streamEl() {
-    return this.streamWindow;
+  get outputs() {
+    return {
+      remoteContainer: this.remoteContainer,
+      localContainer: this.localContainer,
+    };
+  }
+
+  initOutput({ local, remote }: any) {
+    this.remoteContainer = remote;
+    this.localContainer = local;
   }
 
   openMediaDevices = async (constraints: MediaStreamConfig) => {

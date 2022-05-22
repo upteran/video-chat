@@ -12,8 +12,8 @@ import { XIcon, UserIcon } from "@heroicons/react/solid";
 import { $chatStore } from "../../features/chat/store";
 import { removeFromChat } from "../../features/chat/store/events";
 import { $userStore } from "../../features/user/store";
-import { Room, starVideoChat } from "../../features/video";
-import { $videoChatStore } from "../../features/video/store";
+import { Room } from "../../features/video";
+import { $videoChatStore, openVideoEvent } from "../../features/video/store";
 
 import { LogIn } from "../../process/logIn";
 
@@ -25,14 +25,10 @@ export const Chat = () => {
   const { name } = useStore($userStore);
   const [mobileVisible, setMobileVisible] = useState(false);
 
-  const onVideoStart = (userId: string) => {
+  const onVideoStart = () => {
     if (!chat?.chatId) return;
     console.log("video start");
-    starVideoChat({
-      destinationUserId: userId,
-      chatId: chat.chatId,
-      sourceUserId: name,
-    });
+    openVideoEvent({ chatId: chat.chatId });
   };
   const onExitChat = () => {
     if (!chat?.chatId) return;

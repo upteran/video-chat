@@ -1,5 +1,14 @@
 const conf = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  iceServers: [
+    {
+      urls: ["stun:stun.l.google.com:19302"],
+    },
+  ],
+  video: { facingMode: "user" },
+  configuration: {
+    video: true,
+    audio: true,
+  },
 };
 
 // TODO: add types
@@ -17,34 +26,35 @@ export class PeerConnectService {
     this.iceSend = false;
     this.candidateQueue = [];
     this.onConnect = null;
-    this.mediaService = config.mediaService;
+    this.mediaService = null;
   }
 
   get isInit() {
     return !!this.peerConnection;
   }
 
-  async init({ onConnect }: any) {
+  async init({ onConnect, mediaService }: any) {
     // this.config use
+    if (this.isInit) return;
     this.peerConnection = new RTCPeerConnection(conf);
     this.onConnect = onConnect;
+    this.mediaService = mediaService;
 
-    await this.addStreamToConnect();
-
+    this.addStreamToConnect();
     this.msgLocalICEHandler();
     this.connectionStatusListener();
   }
 
   async addStreamToConnect() {
-    const stream = await this.mediaService.getMediaStream();
-    stream.getTracks().forEach((track: any) => {
-      this.peerConnection?.addTrack(track, stream);
-    });
-
-    this.peerConnection?.addEventListener("track", async (event) => {
-      const [remoteStream] = event.streams;
-      this.mediaService.streamEl.srcObject = remoteStream;
-    });
+    try {
+      const stream = await this.mediaService.getMediaStream();
+      stream.getTracks().forEach((track: any) => {
+        this.peerConnection?.addTrack(track, stream);
+      });
+      this.mediaService.localContainer.srcObject = stream;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   connectionStatusListener = () => {
@@ -75,7 +85,7 @@ export class PeerConnectService {
     });
   };
 
-  msgICEHandler = async (message: RTCIceCandidate) => {
+  candidateMsgHandler = async (message: RTCIceCandidate) => {
     if (!this.peerConnection) {
       throw new Error("peerConnection must be init");
     }
@@ -89,22 +99,33 @@ export class PeerConnectService {
     }
   };
 
-  async getOffer(onSuccess: any): Promise<any> {
+  initTrackEvent() {
+    this.peerConnection?.addEventListener("track", (event) => {
+      const [remoteStream] = event.streams;
+      this.mediaService.remoteContainer.srcObject = remoteStream;
+    });
+  }
+
+  async createOffer(onSuccess: any): Promise<any> {
     if (!this.peerConnection) {
       throw new Error("peerConnection must be init");
     }
+
+    this.initTrackEvent();
+
     this.peerConnection
-      .createOffer()
+      .createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true })
       .then((offer: RTCSessionDescriptionInit) => {
         this.peerConnection?.setLocalDescription(offer);
         return offer;
       })
       .then((offer: RTCSessionDescriptionInit) => {
         onSuccess(offer);
-      });
+      })
+      .catch((err) => console.log(err));
   }
 
-  async handleOffer(
+  async offerHandler(
     offer: RTCSessionDescription,
     onSuccess: any,
   ): Promise<any> {
@@ -114,17 +135,17 @@ export class PeerConnectService {
     await this.peerConnection.setRemoteDescription(
       new RTCSessionDescription(offer),
     );
-    let answer;
+
     this.peerConnection
-      .createAnswer()
+      .createAnswer({ offerToReceiveAudio: true, offerToReceiveVideo: true })
       .then((answerRes: any) => {
-        answer = answerRes;
         this.peerConnection?.setLocalDescription(answerRes);
-        return answer;
+        return answerRes;
       })
       .then((answer: any) => {
         onSuccess(answer);
-      });
+      })
+      .catch((err) => console.log(err));
   }
 
   async handlerAnswer(answer: any, onSuccess: any) {

@@ -10,24 +10,18 @@ type peerConnectMsgT = {
 };
 
 type startVideoChatET = {
-  destinationUserId: string;
-  sourceUserId: string;
   chatId: string;
 };
 
 export const {
-  ev: starVideoChat,
-  bridge: starVideoChatWsEvent,
-  wsMsgBuilder: starVideoChatReqBuilder,
+  ev: _,
+  bridge: peerEventsBridge,
+  wsMsgBuilder: peerEventsMsgBuilder,
 } = createWsApi<startVideoChatET, IWsMessage<peerConnectMsgT>, peerConnectMsgT>(
-  "startVideoChat",
+  "peerEvents",
 );
 
-export const {
-  bridge: iceCandidateWsEvent,
-  wsMsgBuilder: iceCandidateReqBuilder,
-} = createWsApi<any, IWsMessage<peerConnectMsgT>, peerConnectMsgT>(
-  "iceCandidate",
-);
-
+export const openVideoEvent = createEvent<{ chatId: string }>("openVideo");
+export const sendPeerOffer = createEvent<startVideoChatET>("sendPeerOffer");
+export const sendPeerAnswer = createEvent<any>("sendPeerAnswer");
 export const connectedPeerEvent = createEvent("connectedPeer");
