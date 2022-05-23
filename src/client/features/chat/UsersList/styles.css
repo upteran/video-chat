@@ -2,7 +2,6 @@
   display: none;
   background: #fff;
   border-right: 1px solid var(--border-color);
-  padding: 1.4em;
 }
 
 .showMobile {
@@ -15,7 +14,7 @@
   align-items: center;
   border-bottom: 1px solid var(--border-color);
   width: 100%;
-  padding: 16px 8px;
+  padding: 12px 24px 12px 12px;
   font-size: 14px;
 }
 
@@ -23,11 +22,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
   margin-right: 12px;
-  border-radius: 50%;
-  border: 1px solid var(--border-color);
+}
+
+.userActions {
+  height: 25px;
 }
 
 @media (min-width: 780px) {

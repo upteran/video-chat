@@ -8,7 +8,7 @@
   --btn-bg-color: #3a80e9;
   --btn-bg-color-hv: #2e64b7;
   --form-item-height: 43px;
-  --chat-header-height: 63px;
+  --chat-header-height: 43px;
 
   /* media */
   /*--tablet-media: 780px;*/
@@ -66,6 +66,14 @@ button {
   line-height: var(--form-item-height);
   transition: background-color .25s ease-out;
   height: var(--form-item-height);
+}
+
+.icon {
+  transition: color .25s ease-out;
+}
+
+.icon:hover {
+  transition: color .25s ease-out;
 }
 
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { useStore } from "effector-react";
 import cx from "classnames";
-import { UserIcon } from "@heroicons/react/solid";
+import { UserCircleIcon } from "@heroicons/react/solid";
 import { VideoCameraIcon } from "@heroicons/react/outline";
 
 import { $chatStore } from "../store";
@@ -34,13 +34,17 @@ export const UsersList = ({
         <div className="userListLine" key={userId}>
           <div className="flex items-center">
             <span className="avatar">
-              <UserIcon className="h-6 w-6 text-gray-500" />
+              <UserCircleIcon
+                className={`h-7 w-7 ${
+                  currentUser !== name ? "text-gray-500" : "text-blue-500"
+                }`}
+              />
             </span>
             {name}
           </div>
           {currentUser !== name && (
             <button className="userActions" onClick={onVideoChatClick(userId)}>
-              <VideoCameraIcon className="h-6 text-gray-500" />
+              <VideoCameraIcon className="w-6 text-gray-500 hover:text-gray-700 icon" />
             </button>
           )}
         </div>

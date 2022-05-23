@@ -32,15 +32,24 @@ export const Room = () => {
 
   return (
     <div className="videoRoomOuter">
+      <div className="videoClose">close</div>
       <div className="videoRoomInner">
         {offer && !isActive && (
           <div className="incomingCall">
-            <p>Incoming call</p>
-            <button onClick={onAnswerCall}>Call</button>
+            <div className="w-2/3 text-center">
+              <p className="text-gray-50">Incoming call</p>
+              <button className="button mt-2 mt-3.5" onClick={onAnswerCall}>
+                Call
+              </button>
+            </div>
           </div>
         )}
-        <video ref={remote} id="remoteVideo" playsInline autoPlay muted />
-        <video ref={local} id="localVideo" playsInline autoPlay muted />
+        <div className="remoteVWrapper">
+          <video ref={remote} id="remoteVideo" playsInline autoPlay muted />
+        </div>
+        <div className="localVWrapper">
+          <video ref={local} id="localVideo" playsInline autoPlay muted />
+        </div>
       </div>
     </div>
   );

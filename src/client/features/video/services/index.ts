@@ -1,6 +1,6 @@
 import { MediaHandlerService } from "./MediaHandlerService";
 import { PeerConnectService } from "./PeerConnectService";
-import { connectedPeerEvent } from "../store/events";
+import { connectedPeerEvent, connectClose } from "../store/events";
 
 const mediaService = new MediaHandlerService({
   media: {
@@ -19,6 +19,7 @@ const initServiceOnVideoStart = async (local: any, remote: any) => {
   });
   peerConnectService.init({
     onConnect: connectedPeerEvent,
+    onConnectClose: connectClose,
     mediaService,
   });
 };

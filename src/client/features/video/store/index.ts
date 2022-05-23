@@ -9,6 +9,7 @@ import {
   sendPeerOffer,
   openVideoEvent,
   sendPeerAnswer,
+  connectClose,
 } from "./events";
 
 type VideoStore = {
@@ -107,6 +108,10 @@ peerEventsBridge.watch(async ({ payload }) => {
 
 connectedPeerEvent.watch(() => {
   console.log("Connected");
+});
+
+connectClose.watch(() => {
+  console.log("CLOSED");
 });
 
 export { $videoChatStore, sendPeerOffer, openVideoEvent, sendPeerAnswer };

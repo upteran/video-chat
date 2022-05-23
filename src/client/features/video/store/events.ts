@@ -25,3 +25,4 @@ export const openVideoEvent = createEvent<{ chatId: string }>("openVideo");
 export const sendPeerOffer = createEvent<startVideoChatET>("sendPeerOffer");
 export const sendPeerAnswer = createEvent<any>("sendPeerAnswer");
 export const connectedPeerEvent = createEvent("connectedPeer");
+export const connectClose = createEvent("connectClose");

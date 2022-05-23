@@ -8,4 +8,5 @@
   right: 35px;
   color: white;
   border: none;
+  transform: rotate(90deg);
 }

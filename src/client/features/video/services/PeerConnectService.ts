@@ -1,3 +1,5 @@
+import adapter from "webrtc-adapter";
+
 const conf = {
   iceServers: [
     {
@@ -33,16 +35,16 @@ export class PeerConnectService {
     return !!this.peerConnection;
   }
 
-  async init({ onConnect, mediaService }: any) {
+  init({ onConnect, onConnectClose, mediaService }: any) {
     // this.config use
     if (this.isInit) return;
     this.peerConnection = new RTCPeerConnection(conf);
     this.onConnect = onConnect;
     this.mediaService = mediaService;
 
-    this.addStreamToConnect();
     this.msgLocalICEHandler();
     this.connectionStatusListener();
+    this.onConnectClose(onConnectClose);
   }
 
   async addStreamToConnect() {
@@ -111,6 +113,7 @@ export class PeerConnectService {
       throw new Error("peerConnection must be init");
     }
 
+    await this.addStreamToConnect();
     this.initTrackEvent();
 
     this.peerConnection
@@ -132,6 +135,9 @@ export class PeerConnectService {
     if (!this.peerConnection) {
       throw new Error("peerConnection must be init");
     }
+    await this.addStreamToConnect();
+    this.initTrackEvent();
+
     await this.peerConnection.setRemoteDescription(
       new RTCSessionDescription(offer),
     );
@@ -155,5 +161,12 @@ export class PeerConnectService {
     const rTCSession = new RTCSessionDescription(answer);
     await this.peerConnection.setRemoteDescription(rTCSession);
     onSuccess(this.candidateQueue[0]);
+  }
+
+  onConnectClose(cb: any) {
+    this.peerConnection?.addEventListener("close", () => {
+      console.log("close connection");
+      cb();
+    });
   }
 }

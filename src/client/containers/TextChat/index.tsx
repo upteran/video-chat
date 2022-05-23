@@ -54,19 +54,19 @@ export const Chat = () => {
           <div className="chatOuter">
             <div className="chatHeader">
               <div className="chatLink">
-                <p>Chat link: {chat?.chatId}</p>
+                {/*<p>Chat link: {chat?.chatId}</p>*/}
                 <button
                   className="usersListBtn circleBtn"
                   onClick={onUsersClick}
                 >
-                  <UserIcon className="h-6 w-6 text-gray-500" />
+                  <UserIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
                 </button>
                 <button className="copyBtn circleBtn" onClick={onCopyClick}>
-                  <ClipboardCopyIcon className="h-6 w-6 text-gray-500" />
+                  <ClipboardCopyIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
                 </button>
               </div>
               <button onClick={onExitChat}>
-                <XIcon className="h-6 w-6 text-gray-500" />
+                <XIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
               </button>
             </div>
             <div className="chat">

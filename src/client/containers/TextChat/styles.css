@@ -30,7 +30,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
-  padding: 16px 12px;
+  padding: 12px 8px;
   height: var(--chat-header-height);
   background: #000;
   color: #e9e9e9;
@@ -50,21 +50,27 @@
   height: 100%;
 }
 
-.copyBtn {
-  margin-left: 8px;
-}
+/*.copyBtn {*/
+/*  margin-left: 2px;*/
+/*}*/
 
 .circleBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #6a7280;
   border-radius: 50%;
   width: 40px;
   height: 40px;
 }
 
+.usersListBtn {
+  display: block;
+}
+
 @media (min-width: 780px) {
+  .usersListBtn {
+    display: none;
+  }
   .circleBtn {
     border: none;
   }
