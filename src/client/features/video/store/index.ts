@@ -10,6 +10,8 @@ import {
   openVideoEvent,
   sendPeerAnswer,
   connectClose,
+  connectCloseBridge,
+  connectCloseMsgBuilder,
 } from "./events";
 
 type VideoStore = {
@@ -62,7 +64,9 @@ const $videoChatStore = createStore<VideoStore>(initialState)
       awaitConnect: false,
       isActive: true,
     };
-  });
+  })
+  .reset(connectClose)
+  .reset(connectCloseBridge);
 
 // send offer / init rtc service
 sendPeerOffer.watch(async ({ chatId }) => {
@@ -110,8 +114,16 @@ connectedPeerEvent.watch(() => {
   console.log("Connected");
 });
 
-connectClose.watch(() => {
+connectClose.watch(({ chatId }) => {
+  peerConnectService.closePeerConnection();
+  // @ts-ignore
+  wsService.send(connectCloseMsgBuilder({ chatId, closeType: "user" }));
   console.log("CLOSED");
+});
+
+connectCloseBridge.watch(() => {
+  console.log("RESPONSE CLOSED");
+  peerConnectService.closePeerConnection();
 });
 
 export { $videoChatStore, sendPeerOffer, openVideoEvent, sendPeerAnswer };

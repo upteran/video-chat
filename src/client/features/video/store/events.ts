@@ -21,8 +21,30 @@ export const {
   "peerEvents",
 );
 
+// close event
+enum CloseTypes {
+  user = "user",
+  internal = "internal",
+}
+
+type CloseMsgT = {
+  chatId: string;
+  closeType: CloseTypes;
+};
+
+type ChatIdT = {
+  chatId: string;
+};
+
+export const {
+  ev: connectClose,
+  bridge: connectCloseBridge,
+  wsMsgBuilder: connectCloseMsgBuilder,
+} = createWsApi<{ chatId: string }, IWsMessage<CloseMsgT>, CloseMsgT>(
+  "connectClose",
+);
+
 export const openVideoEvent = createEvent<{ chatId: string }>("openVideo");
 export const sendPeerOffer = createEvent<startVideoChatET>("sendPeerOffer");
 export const sendPeerAnswer = createEvent<any>("sendPeerAnswer");
 export const connectedPeerEvent = createEvent("connectedPeer");
-export const connectClose = createEvent("connectClose");

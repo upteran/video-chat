@@ -3,6 +3,7 @@ import { useStore } from "effector-react";
 import { XIcon } from "@heroicons/react/solid";
 
 import { sendPeerOffer, $videoChatStore, sendPeerAnswer } from "../store";
+import { connectClose } from "../store/events";
 import { initServiceOnVideoStart } from "../services";
 
 import "./styles.css";
@@ -32,9 +33,14 @@ export const Room = () => {
     });
   };
 
+  const closeVideo = () => {
+    if (!chatId) return;
+    connectClose({ chatId });
+  };
+
   return (
     <div className="videoRoomOuter">
-      <button className="videoClose">
+      <button className="videoClose" onClick={closeVideo}>
         <XIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
       </button>
       <div className="videoRoomInner">

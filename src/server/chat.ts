@@ -90,6 +90,12 @@ const messageHandlers = (type: string, data: any, ws: any) => {
         currWsId: ws.clientId,
       });
     },
+    connectClose: (data) => {
+      socketController.sendMsgToClients(data.payload.chatId, data, {
+        toSelf: false,
+        currWsId: ws.clientId,
+      });
+    },
     defaultAction: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data, {
         toSelf: true,

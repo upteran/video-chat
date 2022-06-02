@@ -47,8 +47,7 @@ export const Chat = () => {
   return (
     <>
       <div className="chatOuter">
-        {/*{(awaitConnect || isActive) && <Room />}*/}
-        <Room />
+        {(awaitConnect || isActive) && <Room />}
         <div className="chatHeader">
           <div className="chatLink">
             {/*<p>Chat link: {chat?.chatId}</p>*/}
