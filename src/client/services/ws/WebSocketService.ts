@@ -13,14 +13,28 @@ type SubscribeStoreConfig = {
 export class WebSocketService {
   socket: WebSocketSubject<string> | null;
   url: string;
+  onClose: any;
 
   constructor({ url }: WebSocketConfig) {
     this.url = url;
     this.socket = null;
+    this.onClose = null;
   }
 
   init() {
-    this.socket = webSocket(this.url);
+    try {
+      this.socket = webSocket({
+        url: this.url,
+        closeObserver: {
+          next: (e) => {
+            console.log(e);
+            this.onClose && this.onClose(e);
+          },
+        },
+      });
+    } catch (e) {
+      console.log("this.socket error", e);
+    }
     const obs = this.socket?.multiplex(
       () => {
         return "sub";
@@ -38,6 +52,10 @@ export class WebSocketService {
     return () => {
       sub?.unsubscribe();
     };
+  }
+
+  set close(onClose: any) {
+    this.onClose = onClose;
   }
 
   send(msg: IWsMessage<any>): void {

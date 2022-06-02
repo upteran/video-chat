@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "effector-react";
+import { XIcon } from "@heroicons/react/solid";
+
 import { sendPeerOffer, $videoChatStore, sendPeerAnswer } from "../store";
 import { initServiceOnVideoStart } from "../services";
 
@@ -32,7 +34,9 @@ export const Room = () => {
 
   return (
     <div className="videoRoomOuter">
-      <div className="videoClose">close</div>
+      <button className="videoClose">
+        <XIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
+      </button>
       <div className="videoRoomInner">
         {offer && !isActive && (
           <div className="incomingCall">
