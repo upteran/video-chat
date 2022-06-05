@@ -15,7 +15,7 @@ const conf = {
 
 // TODO: add types
 export class PeerConnectService {
-  pc: null | RTCPeerConnection;
+  pc: RTCPeerConnection;
   config: any;
   iceSend: boolean;
   candidateQueue: Array<RTCIceCandidateInit>;
@@ -25,6 +25,7 @@ export class PeerConnectService {
 
   constructor(config: any) {
     this.config = config;
+    // @ts-ignore
     this.pc = null;
     this.iceSend = false;
     this.candidateQueue = [];
@@ -41,53 +42,87 @@ export class PeerConnectService {
   init({ onConnect, mediaService }: any) {
     // this.config use
     if (this.isInit) return;
-    this.pc = new RTCPeerConnection(conf);
+
+    this.createRTCPConnection();
     this.onConnect = onConnect;
     this.mediaService = mediaService;
-
-    this.connectionStatusListener();
-    this.msgLocalICEHandler();
   }
+
+  createRTCPConnection = () => {
+    this.pc = new RTCPeerConnection(conf);
+    this.connectionStatusListener("add");
+    this.msgLocalICEListener("add");
+  };
 
   async addStreamToConnect() {
     try {
+      if (this.checkSignalIs("closed")) {
+        console.log("Try to addStreamToConnect to close connection");
+        return;
+      }
+
       this.stream = await this.mediaService.getMediaStream();
       this.stream.getTracks().forEach((track: any) => {
-        this.pc?.addTrack(track, this.stream);
+        if (!this.checkSignalIs("closed")) {
+          this.pc.addTrack(track, this.stream);
+        }
       });
       this.mediaService.localContainer.srcObject = this.stream;
     } catch (err) {
       console.log(err);
+      this.closeMedia();
     }
   }
 
-  connectionStatusListener = () => {
-    if (!this.pc) {
-      throw new Error("peerConnection must be init");
-    }
-    this.pc.addEventListener("connectionstatechange", (event: any) => {
-      if (this.pc?.connectionState === "connected") {
-        console.log("Connection establish!");
-        this.onConnect && this.onConnect(event);
-      }
-    });
+  checkSignalIs = (state: RTCSignalingState): boolean => {
+    return this.pc.signalingState === state;
   };
 
-  msgLocalICEHandler = () => {
+  connectionStatusListener = (action = "add") => {
     if (!this.pc) {
       throw new Error("peerConnection must be init");
     }
-    this.pc.addEventListener("icecandidate", (event: any) => {
-      if (event.candidate && !this.iceSend) {
-        this.iceSend = true;
-        this.candidateQueue.push(event.candidate);
-        console.log("Add to queue candidate ICE!");
-      }
-    });
+    if (action === "add") {
+      this.pc.addEventListener("connectionstatechange", this.onConnectHandler);
+    } else {
+      this.pc.removeEventListener(
+        "connectionstatechange",
+        this.onConnectHandler,
+      );
+    }
+  };
+
+  onConnectHandler = (ev: any) => {
+    if (this.pc.connectionState === "connected") {
+      console.log("Connection establish!");
+      this.onConnect && this.onConnect(ev);
+    }
+  };
+
+  msgLocalICEListener = (action = "add") => {
+    if (!this.isInit) {
+      throw new Error("peerConnection must be init");
+    }
+    if (action === "add") {
+      this.pc.addEventListener("icecandidate", this.iceCandidateQueueHandler);
+    } else {
+      this.pc.removeEventListener(
+        "icecandidate",
+        this.iceCandidateQueueHandler,
+      );
+    }
+  };
+
+  iceCandidateQueueHandler = (event: any) => {
+    if (event.candidate && !this.iceSend) {
+      this.iceSend = true;
+      this.candidateQueue.push(event.candidate);
+      console.log("Add to queue candidate ICE!", event.candidate);
+    }
   };
 
   candidateMsgHandler = async (message: RTCIceCandidate) => {
-    if (!this.pc) {
+    if (!this.isInit) {
       throw new Error("peerConnection must be init");
     }
     if (message) {
@@ -101,15 +136,22 @@ export class PeerConnectService {
   };
 
   initTrackEvent() {
-    this.pc?.addEventListener("track", (event) => {
+    this.pc.addEventListener("track", (event) => {
       const [remoteStream] = event.streams;
       this.mediaService.remoteContainer.srcObject = remoteStream;
     });
   }
 
   async createOffer(onSuccess: any): Promise<any> {
-    if (!this.pc) {
+    if (!this.isInit) {
       throw new Error("peerConnection must be init");
+    }
+
+    console.log("OFFER CREATE", this.pc.signalingState);
+
+    if (this.checkSignalIs("closed")) {
+      console.log("Try to createOffer to close connection");
+      this.createRTCPConnection();
     }
 
     await this.addStreamToConnect();
@@ -118,22 +160,31 @@ export class PeerConnectService {
     this.pc
       .createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true })
       .then((offer: RTCSessionDescriptionInit) => {
-        this.pc?.setLocalDescription(offer);
+        this.pc.setLocalDescription(offer);
         return offer;
       })
       .then((offer: RTCSessionDescriptionInit) => {
         onSuccess(offer);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        this.closeMedia();
+      });
   }
 
   async offerHandler(
     offer: RTCSessionDescription,
     onSuccess: any,
   ): Promise<any> {
-    if (!this.pc) {
+    if (!this.isInit) {
       throw new Error("peerConnection must be init");
     }
+
+    if (this.checkSignalIs("closed")) {
+      console.log("Try offerHandler of wrong connection connection");
+      this.createRTCPConnection();
+    }
+
     await this.addStreamToConnect();
     this.initTrackEvent();
 
@@ -142,33 +193,57 @@ export class PeerConnectService {
     this.pc
       .createAnswer({ offerToReceiveAudio: true, offerToReceiveVideo: true })
       .then((answerRes: any) => {
-        this.pc?.setLocalDescription(answerRes);
+        this.pc.setLocalDescription(answerRes);
         return answerRes;
       })
       .then((answer: any) => {
         onSuccess(answer);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        this.closeMedia();
+      });
   }
 
   async handlerAnswer(answer: any, onSuccess: any) {
-    if (!this.pc) {
+    if (!this.isInit) {
       throw new Error("peerConnection must be init");
     }
+
+    if (this.checkSignalIs("closed") || this.checkSignalIs("stable")) {
+      console.log("Try to handlerAnswer to close connection");
+      return;
+    }
+
     const rTCSession = new RTCSessionDescription(answer);
     await this.pc.setRemoteDescription(rTCSession);
 
-    onSuccess(this.candidateQueue[0]);
+    // TODO: create common cases logic
+    onSuccess(this.candidateQueue[this.candidateQueue.length - 1]);
   }
 
+  closeMedia = () => {
+    if (!this.stream) return;
+
+    this.stream.getTracks().forEach((track: any) => {
+      if (track.readyState == "live") {
+        track.stop();
+      }
+    });
+  };
+
   closePeerConnection() {
-    this.pc?.close();
+    if (!this.isInit) return;
+
     try {
-      this.stream.getTracks().forEach((track: any) => {
-        if (track.readyState == "live") {
-          track.stop();
-        }
-      });
+      this.pc.close();
+      this.closeMedia();
+      this.iceSend = false;
+      this.candidateQueue = [];
+      this.connectionStatusListener("remove");
+      this.msgLocalICEListener("remove");
+
+      console.log("closePeerConnection end!");
     } catch (err) {
       console.log(err);
     }

@@ -13,6 +13,16 @@ export const Room = () => {
   const local = useRef(null);
   const remote = useRef(null);
   const { chatId, offer, isHost, isActive } = useStore($videoChatStore);
+  const onDisconnect = () => {
+    if (!chatId) return;
+    connectClose({ chatId });
+  };
+  useEffect(() => {
+    window.addEventListener("unload", onDisconnect);
+    return () => {
+      window.removeEventListener("unload", onDisconnect);
+    };
+  }, []);
   useEffect(() => {
     if (local.current && remote.current) {
       console.log("init");
