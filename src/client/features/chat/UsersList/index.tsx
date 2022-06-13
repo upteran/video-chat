@@ -4,6 +4,7 @@ import cx from "classnames";
 import { UserCircleIcon } from "@heroicons/react/solid";
 import { VideoCameraIcon } from "@heroicons/react/outline";
 
+import { LoadStateStatus } from "../consts";
 import { $chatStore } from "../store";
 import { $userStore } from "../../user/store";
 
@@ -18,10 +19,10 @@ export const UsersList = ({
   isMobileVisible = true,
   onVideoStart,
 }: UsersListProps) => {
-  const { isLoaded, chat } = useStore($chatStore);
+  const { loadedState, chat } = useStore($chatStore);
   const { name: currentUser } = useStore($userStore);
 
-  if (!isLoaded || !chat) return null;
+  if (loadedState === LoadStateStatus.notLoaded || !chat) return null;
 
   const onVideoChatClick = (userId: string) => () => {
     onVideoStart(userId);

@@ -1,5 +1,6 @@
 import { UserType } from "../user/types";
 import { Message, MessagesList } from "../messages/types";
+import { LoadStateStatus } from "./consts";
 
 // store / chat
 export interface Chat {
@@ -13,8 +14,7 @@ export interface ChatConnected extends Chat {
 
 export type ChatStateType = {
   chat: Chat | null;
-  isLoaded: boolean;
-  isFetching: boolean;
+  loadedState: LoadStateStatus;
   messages: Array<Message>;
   messagesInfoMap: null | {
     [key: string]: {

@@ -14,6 +14,8 @@ import {
   CreateChatEv,
 } from "../types";
 
+import { LoadStateStatus } from "../consts";
+
 import {
   createChatWsEvent,
   createChat,
@@ -32,8 +34,7 @@ import { createUser } from "../../user/helpers";
 
 const initialState = {
   chat: null,
-  isLoaded: false,
-  isFetching: false,
+  loadedState: LoadStateStatus.notLoaded,
   messages: [],
   messagesInfoMap: null,
 };
@@ -55,13 +56,18 @@ const createUsersViewData = (users: Array<any>, oldState = {}) => {
 };
 
 export const $chatStore = createStore<ChatStateType>(initialState)
+  .on(createChat, (chat) => {
+    return {
+      ...chat,
+      loadedState: LoadStateStatus.fetching,
+    };
+  })
   .on(createChatWsEvent, ({ chat }, message: IWsMessage<Chat>) => {
     const { payload } = message;
 
     return {
       chat: payload,
-      isLoaded: true,
-      isFetching: false,
+      loadedState: LoadStateStatus.loaded,
       messages: [],
       messagesInfoMap: createUsersViewData(payload.users),
     };
@@ -77,8 +83,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
           users,
           chatId,
         },
-        isLoaded: true,
-        isFetching: false,
+        loadedState: LoadStateStatus.loaded,
         messages,
         messagesInfoMap: createUsersViewData(users),
       };
@@ -95,8 +100,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
           users,
           chatId,
         },
-        isLoaded: true,
-        isFetching: false,
+        loadedState: LoadStateStatus.loaded,
         messages,
         messagesInfoMap,
       };

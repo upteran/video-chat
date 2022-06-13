@@ -55,6 +55,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
       });
       if (!chatData) return;
       socketController.checkChatExist(ws, data.payload.chatId);
+      socketController.removeChatFromSocket(ws);
       socketController.sendMsgToClients(
         data.payload.chatId,
         {

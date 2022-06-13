@@ -82,6 +82,13 @@ class SocketsController {
     }
   }
 
+  removeChatFromSocket(socket: CustomWebSocket) {
+    const s = this.sockets.get(socket.clientId);
+    if (s?.chatId) {
+      s.chatId = null;
+    }
+  }
+
   sendMsgToClients(
     chatId: string,
     msg: any,
@@ -93,6 +100,7 @@ class SocketsController {
         { message: msg },
         `Couldn't send message to any client, noa ${chatId} id`,
       );
+      this.logger.info({ chats: this.chatIdsToSocket });
       return;
     }
     for (const clientId of ids) {
