@@ -8,7 +8,7 @@
 - [x] customize logger
 - [] add multi chat support
 - [] add tests
-- [] upd: refactor ws service (reconnect, diff client handlers)
+- [x] upd: refactor ws service (reconnect, diff client handlers)
 - [x] add: css styles
 - [x] remove: scss
 - [] add docs / api readme / descriptions
@@ -37,3 +37,5 @@
 - [] reconnects
 
 #### bugs
+
+[] send offer to all users in chat. Need use users Id and connect it with ws connections instances, to compare it when RTC offer is got
