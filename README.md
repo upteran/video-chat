@@ -18,7 +18,8 @@
 - [] add security auth
 - [] remove users ws streams on exit
 - [] add error boundaries
-- [] add client errors handler
+- [x] add client errors handler
+- [] connect messages
 #### text chat
 - [x] add: create or find chat room
 - [x] add: server message handlers
