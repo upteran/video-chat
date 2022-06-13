@@ -248,11 +248,4 @@ export class PeerConnectService {
       console.log(err);
     }
   }
-
-  onConnectClose(cb: any) {
-    this.pc?.addEventListener("close", () => {
-      console.log("close connection");
-      cb();
-    });
-  }
 }

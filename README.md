@@ -35,3 +35,5 @@
 - [] customizing video window
 - [] handle slow network cases
 - [] reconnects
+
+#### bugs

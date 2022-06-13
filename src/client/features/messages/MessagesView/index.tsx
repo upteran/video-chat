@@ -1,7 +1,7 @@
 import React from "react";
 import { useStore } from "effector-react";
 
-import { MessageT } from "../types";
+import { Message } from "../types";
 import { $messagesList } from "../store";
 import { $chatStore } from "../../chat/store";
 
@@ -12,7 +12,7 @@ export const MessagesView = () => {
   const { messagesInfoMap } = useStore($chatStore);
   return (
     <div className="messages">
-      {messages.map(({ message, messageId, userId }: MessageT) => (
+      {messages.map(({ message, messageId, userId }: Message) => (
         <div
           key={messageId}
           style={{

@@ -5,5 +5,4 @@ export const createUser = (userName: string, chatId: string): UserType => ({
   name: userName,
   chatId,
   userId: nanoid(),
-  messages: [],
 });

@@ -1,9 +1,8 @@
 import { createStore } from "effector";
-import { wsService } from "../../../services/ws";
 import { IWsMessage } from "../../../services/ws/types";
 import { peerConnectService } from "../services";
 import {
-  peerEventsMsgBuilder,
+  peerEventsApi,
   peerEventsBridge,
   connectedPeerEvent,
   sendPeerOffer,
@@ -11,17 +10,11 @@ import {
   sendPeerAnswer,
   connectClose,
   connectCloseBridge,
-  connectCloseMsgBuilder,
+  connectCloseApi,
 } from "./events";
 
-type VideoStore = {
-  chatId: null | string;
-  isActive: boolean;
-  awaitConnect: boolean;
-  answer: any;
-  offer: any;
-  isHost: boolean;
-};
+import { VideoStore } from "../types";
+import { CloseTypes } from "../consts";
 
 const initialState = {
   chatId: null,
@@ -71,36 +64,34 @@ const $videoChatStore = createStore<VideoStore>(initialState)
 // send offer / init rtc service
 sendPeerOffer.watch(async ({ chatId }) => {
   await peerConnectService.createOffer((offer: RTCOfferOptions) =>
-    wsService.send(
-      peerEventsMsgBuilder({
-        offer,
-        chatId,
-      }),
-    ),
+    peerEventsApi({
+      offer,
+      chatId,
+    }),
   );
 });
 
 sendPeerAnswer.watch(async ({ offer, chatId }) => {
-  await peerConnectService.offerHandler(offer, (answer: any) =>
-    wsService.send(
-      peerEventsMsgBuilder({
+  await peerConnectService.offerHandler(
+    offer,
+    (answer: RTCOfferAnswerOptions) =>
+      peerEventsApi({
         answer,
         chatId,
       }),
-    ),
   );
 });
 
 // handle offer and candidate message / init rtc service
 peerEventsBridge.watch(async ({ payload }) => {
   if (payload.answer) {
-    await peerConnectService.handlerAnswer(payload.answer, (candidate: any) =>
-      wsService.send(
-        peerEventsMsgBuilder({
+    await peerConnectService.handlerAnswer(
+      payload.answer,
+      (candidate: RTCIceCandidate) =>
+        peerEventsApi({
           candidate,
           chatId: payload.chatId,
         }),
-      ),
     );
   }
 
@@ -116,8 +107,7 @@ connectedPeerEvent.watch(() => {
 
 connectClose.watch(({ chatId }) => {
   peerConnectService.closePeerConnection();
-  // @ts-ignore
-  wsService.send(connectCloseMsgBuilder({ chatId, closeType: "user" }));
+  connectCloseApi({ chatId, closeType: CloseTypes.user });
   console.log("CLOSED");
 });
 

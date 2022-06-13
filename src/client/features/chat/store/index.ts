@@ -1,29 +1,31 @@
 import { createStore } from "effector";
-import { parseCookies, setCookie, destroyCookie } from "nookies";
+import { setCookie, destroyCookie } from "nookies";
 import { nanoid } from "nanoid";
 
 // ws
-import { wsService } from "../../../services/ws";
 import { IWsMessage } from "../../../services/ws/types";
+
+// chat types
+import {
+  Chat,
+  ChatConnected,
+  UserChatEv,
+  ChatStateType,
+  CreateChatEv,
+} from "../types";
 
 import {
   createChatWsEvent,
   createChat,
-  createChatReqBuilder,
+  connectChatApi,
   connectChat,
   connectChatWsEvent,
-  connectChatWsBuilder,
-  userChatET,
-  createChatET,
+  createChatApi,
   removeFromChatWsEvent,
   removeFromChat,
-  removeChatWsBuilder,
+  removeChatApi,
   closeChatWsEvent,
 } from "./events";
-
-// chat
-import { IChat, IChatConnected } from "../types";
-import { ChatStateType } from "../types";
 
 // user
 import { createUser } from "../../user/helpers";
@@ -53,25 +55,20 @@ const createUsersViewData = (users: Array<any>, oldState = {}) => {
 };
 
 export const $chatStore = createStore<ChatStateType>(initialState)
-  .on(
-    // @ts-ignore
-    createChatWsEvent,
-    ({ chat }, message: IWsMessage<IChat>) => {
-      const { payload } = message;
+  .on(createChatWsEvent, ({ chat }, message: IWsMessage<Chat>) => {
+    const { payload } = message;
 
-      return {
-        chat: payload,
-        isLoaded: true,
-        isFetching: false,
-        messages: [],
-        messagesInfoMap: createUsersViewData(payload.users),
-      };
-    },
-  )
+    return {
+      chat: payload,
+      isLoaded: true,
+      isFetching: false,
+      messages: [],
+      messagesInfoMap: createUsersViewData(payload.users),
+    };
+  })
   .on(
-    // @ts-ignore
     connectChatWsEvent,
-    ({ chat, messagesInfoMap }, message: IWsMessage<IChatConnected>) => {
+    ({ chat, messagesInfoMap }, message: IWsMessage<ChatConnected>) => {
       const {
         payload: { chatId, users, messages },
       } = message;
@@ -88,9 +85,8 @@ export const $chatStore = createStore<ChatStateType>(initialState)
     },
   )
   .on(
-    // @ts-ignore
     removeFromChatWsEvent,
-    ({ chat, messagesInfoMap }, message: IWsMessage<IChatConnected>) => {
+    ({ chat, messagesInfoMap }, message: IWsMessage<ChatConnected>) => {
       const {
         payload: { chatId, users, messages },
       } = message;
@@ -129,23 +125,17 @@ closeChatWsEvent.watch(() => {
   destroyCookie(null, "chatToken");
 });
 
-createChat.watch(({ userName }: createChatET) => {
+createChat.watch(({ userName }: CreateChatEv) => {
   const chatId = nanoid();
   const users = createUser(userName, chatId);
-  const msg = createChatReqBuilder({ chatId, users: [users] });
-  // @ts-ignore
-  wsService.send(msg);
+  createChatApi({ chatId, users: [users] });
 });
 
-connectChat.watch(({ userName, chatId }: userChatET) => {
+connectChat.watch(({ userName, chatId }: UserChatEv) => {
   const user = createUser(userName, chatId);
-  const msg = connectChatWsBuilder({ chatId, user });
-  // @ts-ignore
-  wsService.send(msg);
+  connectChatApi({ chatId, user });
 });
 
-removeFromChat.watch(({ userName, chatId }: userChatET) => {
-  const msg = removeChatWsBuilder({ chatId, userName });
-  // @ts-ignore
-  wsService.send(msg);
+removeFromChat.watch(({ userName, chatId }: UserChatEv) => {
+  removeChatApi({ chatId, userName });
 });

@@ -25,7 +25,6 @@ export const Room = () => {
   }, []);
   useEffect(() => {
     if (local.current && remote.current) {
-      console.log("init");
       initServiceOnVideoStart(local.current, remote.current);
       if (isHost && chatId && !send) {
         sendPeerOffer({

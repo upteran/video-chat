@@ -9,15 +9,15 @@ import { $userStore } from "../../user/store";
 
 import "./styles.css";
 
-interface UsersListT {
+type UsersListProps = {
   isMobileVisible: boolean;
   onVideoStart: (userId: string) => void;
-}
+};
 
 export const UsersList = ({
   isMobileVisible = true,
   onVideoStart,
-}: UsersListT) => {
+}: UsersListProps) => {
   const { isLoaded, chat } = useStore($chatStore);
   const { name: currentUser } = useStore($userStore);
 
