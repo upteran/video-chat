@@ -1,9 +1,9 @@
 import React from "react";
 import { useStore } from "effector-react";
 
-import { Message } from "../types";
-import { $messagesList } from "../store";
-import { $chatStore } from "../../chat/store";
+import { Message } from "../../../entity/messages/types";
+import { $messagesList } from "../../../entity/messages/store";
+import { $chatStore } from "../../../entity/chat/store";
 
 import "./styles.css";
 

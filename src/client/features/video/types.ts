@@ -1,4 +1,4 @@
-import { Chat } from "../chat/types";
+import { Chat } from "../../entity/chat/types";
 import { CloseTypes } from "./consts";
 
 export type PeerConnectMsg = {

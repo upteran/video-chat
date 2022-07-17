@@ -3,15 +3,15 @@ import React, { useEffect, useState } from "react";
 // import { Link, Route } from "wouter";
 import { useStore } from "effector-react";
 
-import { UsersList } from "../../features/chat/UsersList";
-import { MessagesView } from "../../features/messages/MessagesView";
-import { MessageInput } from "../../features/messages/MessageInput";
+import { UsersList } from "./UsersList";
+import { MessagesView } from "./MessagesView";
+import { MessageInput } from "./MessageInput";
 import { ClipboardCopyIcon } from "@heroicons/react/solid";
 import { XIcon, UserIcon } from "@heroicons/react/solid";
 
-import { $chatStore } from "../../features/chat/store";
-import { removeFromChat } from "../../features/chat/store/events";
-import { $userStore } from "../../features/user/store";
+import { $chatStore } from "../../entity/chat/store";
+import { removeFromChat } from "../../entity/chat/store/events";
+import { $userStore } from "../../entity/user/store";
 import { $videoChatStore, openVideoEvent } from "../../features/video/store";
 
 import "./styles.css";

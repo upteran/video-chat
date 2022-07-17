@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import cx from "classnames";
 
-import { createUserEvent } from "../store";
+import { createUserEvent } from "../../../entity/user/store";
 
 import "./styles.css";
 

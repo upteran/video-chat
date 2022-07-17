@@ -4,9 +4,9 @@ import cx from "classnames";
 import { UserCircleIcon } from "@heroicons/react/solid";
 import { VideoCameraIcon } from "@heroicons/react/outline";
 
-import { LoadStateStatus } from "../consts";
-import { $chatStore } from "../store";
-import { $userStore } from "../../user/store";
+import { LoadStateStatus } from "../../../entity/chat/consts";
+import { $chatStore } from "../../../entity/chat/store";
+import { $userStore } from "../../../entity/user/store";
 
 import "./styles.css";
 

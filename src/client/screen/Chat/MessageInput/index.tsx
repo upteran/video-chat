@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useStore } from "effector-react";
 
 import { PaperAirplaneIcon } from "@heroicons/react/solid";
-import { sendChatMessage } from "../store/events";
-import { $chatStore } from "../../chat/store";
-import { $userStore } from "../../user/store";
+import { sendChatMessage } from "../../../entity/messages/store/events";
+import { $chatStore } from "../../../entity/chat/store";
+import { $userStore } from "../../../entity/user/store";
 
 import "./styles.css";
 

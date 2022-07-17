@@ -3,10 +3,10 @@ import { useStore } from "effector-react";
 
 import { XIcon } from "@heroicons/react/solid";
 import { ChatAlt2Icon } from "@heroicons/react/outline";
-import { AddUser } from "../../features/user/AddUser";
-import { AddChat } from "../../features/chat/AddChat";
+import { AddUser } from "./AddUser";
+import { AddChat } from "./AddChat";
 
-import { $userStore, logOutEvent } from "../../features/user/store";
+import { $userStore, logOutEvent } from "../../entity/user/store";
 
 import "./styles.css";
 

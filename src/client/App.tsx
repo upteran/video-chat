@@ -1,11 +1,11 @@
 import React from "react";
 import { hot } from "react-hot-loader";
 import { connect } from "effector-react";
-import { LoadStateStatus } from "./features/chat/consts";
+import { LoadStateStatus } from "./entity/chat/consts";
 import { Chat } from "./screen/Chat";
 // import { ErrorNotify } from "./errors/notify";
 import { LogIn } from "./screen/LogIn";
-import { $chatStore } from "./features/chat/store";
+import { $chatStore } from "./entity/chat/store";
 import { AppError } from "./errors/screens/appError";
 
 import "./styles.css";
