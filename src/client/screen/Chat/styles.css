@@ -26,6 +26,7 @@
   width: 100%;
   height: 100%;
   background: #fff;
+  padding: 0 18px 18px;
 }
 
 .chatHeader {
@@ -70,6 +71,24 @@
   display: block;
 }
 
+.chatInner {
+  position: relative;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.chatInner:before {
+  content: '';
+  position: absolute;
+  top: -13px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: #ffffffa1;
+  z-index: 10;
+  filter: blur(8px);
+}
+
 @media (min-width: 780px) {
   .usersListBtn {
     display: none;
@@ -94,10 +113,5 @@
 
   .chatHeader {
     border-radius: 6px 6px 0 0;
-  }
-
-  .chatInner {
-    justify-content: space-between;
-    flex-direction: column;
   }
 }
