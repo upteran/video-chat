@@ -8,8 +8,21 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  background-color: #fff;
+  /*background-size: cover;*/
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
 }
+
+/*.chat:before {*/
+/*  content: '';*/
+/*  position: absolute;*/
+/*  left: 0;*/
+/*  top: 0;*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  opacity: 0.6;*/
+/*  background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/swirl_pattern.png');*/
+/*}*/
 
 .chatOuter {
   position: relative;
@@ -20,13 +33,37 @@
 }
 
 .chatInner {
+  position: relative;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background: #fff;
-  padding: 0 18px 18px;
+  /*background: #fff;*/
+  padding: 0 18px 0;
+}
+
+.chatInner:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/swirl_pattern.png');
+}
+
+.chatInner:after {
+  content: '';
+  position: absolute;
+  top: -13px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: #ffffffa1;
+  z-index: 10;
+  filter: blur(8px);
 }
 
 .chatHeader {
@@ -75,18 +112,6 @@
   position: relative;
   justify-content: flex-end;
   flex-direction: column;
-}
-
-.chatInner:before {
-  content: '';
-  position: absolute;
-  top: -13px;
-  left: 0;
-  width: 100%;
-  height: 20px;
-  background: #ffffffa1;
-  z-index: 10;
-  filter: blur(8px);
 }
 
 @media (min-width: 780px) {

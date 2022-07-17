@@ -1,6 +1,6 @@
 .userList {
   display: none;
-  background: #fff;
+  background: #f5f5fe;
   border-right: 1px solid var(--border-color);
 }
 
