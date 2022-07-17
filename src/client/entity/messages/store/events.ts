@@ -1,8 +1,9 @@
-import { createWsApi } from "../../../services/ws";
-import { IWsMessage } from "../../../services/ws/types";
+import { createWsApi } from "services/ws";
+import { IWsMessage } from "services/ws/types";
+import { Chat } from "entity/chat/types";
+import { UserType } from "entity/user/types";
+
 import { Message } from "../types";
-import { Chat } from "../../chat/types";
-import { UserType } from "../../user/types";
 
 type sendMsgType = {
   userId: UserType["userId"];

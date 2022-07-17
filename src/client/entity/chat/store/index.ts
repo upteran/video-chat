@@ -3,7 +3,7 @@ import { setCookie, destroyCookie } from "nookies";
 import { nanoid } from "nanoid";
 
 // ws
-import { IWsMessage } from "../../../services/ws/types";
+import { IWsMessage } from "services/ws/types";
 
 // chat types
 import {

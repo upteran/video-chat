@@ -9,13 +9,12 @@ import { MessageInput } from "./MessageInput";
 import { ClipboardCopyIcon } from "@heroicons/react/solid";
 import { XIcon, UserIcon } from "@heroicons/react/solid";
 
-import { $chatStore } from "../../entity/chat/store";
-import { removeFromChat } from "../../entity/chat/store/events";
-import { $userStore } from "../../entity/user/store";
-import { $videoChatStore, openVideoEvent } from "../../features/video/store";
-
+import { $chatStore } from "entity/chat/store";
+import { removeFromChat } from "entity/chat/store/events";
+import { $userStore } from "entity/user/store";
+import { $videoChatStore, openVideoEvent } from "features/video/store";
+import { Room } from "features/video";
 import "./styles.css";
-import { Room } from "../../features/video";
 
 export const Chat = () => {
   const { chat } = useStore($chatStore);

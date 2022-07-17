@@ -1,5 +1,5 @@
-import { createWsApi } from "../../../services/ws";
-import { IWsMessage } from "../../../services/ws/types";
+import { createWsApi } from "services/ws";
+import { IWsMessage } from "services/ws/types";
 import {
   Chat,
   ChatConnected,

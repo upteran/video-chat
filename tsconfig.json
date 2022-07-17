@@ -15,14 +15,7 @@
     "outDir": "./dist",
     "jsx": "react",
     "typeRoots": ["node_modules/@types"],
-    "baseUrl": ".",
-    "paths": {
-      "@components/*": ["src/app/components/*"],
-      "@features/*": ["src/app/features/*"],
-      "@layouts/*": ["src/app/layouts/*"],
-      "@pages/*": ["src/app/pages/*"],
-      "@services/*": ["src/app/services/*"]
-    }
+    "baseUrl": "./src/client/",
   },
   "include": ["src/**/**/*.ts", "./*.ts", "src/**/**/*.js", "./*.js"],
   "exclude": ["node_modules"],

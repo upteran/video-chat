@@ -1,10 +1,17 @@
 // shared config (dev and prod)
 const { resolve } = require("path");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
+    alias: {
+      components: resolve(__dirname, "../../src/client/components/"),
+      entity: resolve(__dirname, "../../src/client/entity/"),
+      features: resolve(__dirname, "../../src/client/features/"),
+      services: resolve(__dirname, "../../src/client/services/"),
+    },
   },
   context: resolve(__dirname, "../../src"),
   module: {
@@ -27,7 +34,10 @@ module.exports = {
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ template: "client/index.html.ejs" })],
+  plugins: [
+    new HtmlWebpackPlugin({ template: "client/index.html.ejs" }),
+    new TsconfigPathsPlugin({}),
+  ],
   externals: {
     react: "React",
     "react-dom": "ReactDOM",

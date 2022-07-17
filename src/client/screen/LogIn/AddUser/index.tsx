@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { FieldInput } from "../../../components/FieldInput";
-import { createUserEvent } from "../../../entity/user/store";
+import { FieldInput } from "components/FieldInput";
+import { createUserEvent } from "entity/user/store";
 
 import "./styles.css";
 

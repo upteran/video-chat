@@ -1,5 +1,5 @@
 import { createStore } from "effector";
-import { IWsMessage } from "../../../services/ws/types";
+import { IWsMessage } from "services/ws/types";
 import { peerConnectService } from "../services";
 import {
   peerEventsApi,

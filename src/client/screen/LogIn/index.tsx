@@ -6,7 +6,7 @@ import { ChatAlt2Icon } from "@heroicons/react/outline";
 import { AddUser } from "./AddUser";
 import { AddChat } from "./AddChat";
 
-import { $userStore, logOutEvent } from "../../entity/user/store";
+import { $userStore, logOutEvent } from "entity/user/store";
 
 import "./styles.css";
 

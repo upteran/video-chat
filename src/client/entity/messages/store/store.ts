@@ -1,10 +1,10 @@
 import { createStore, sample } from "effector";
 import { nanoid } from "nanoid";
 
-import { IWsMessage } from "../../../services/ws/types";
+import { connectChatWsEvent } from "entity/chat/store/events";
+import { IWsMessage } from "services/ws/types";
 import { Message } from "../types";
 
-import { connectChatWsEvent } from "../../chat/store/events";
 import {
   updateMessagesListWsEvent,
   sendChatMessage,
