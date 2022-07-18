@@ -1,11 +1,13 @@
 .messages {
   display: flex;
   flex-direction: column;
-  height: auto;
+  /*height: auto;*/
   /*max-height: 100%;*/
   width: 100%;
   padding: 16px 0;
   overflow-y: auto;
+  z-index: 2;
+  word-break: break-word;
 }
 
 .message {
