@@ -27,11 +27,11 @@ export const MessagesView = () => {
         <div
           key={messageId}
           className={cx("message", {
-            mainUser: name === userMap[userId].name,
+            mainUser: name === userMap[userId]?.name,
           })}
         >
           <div className="messageUserName">
-            {userMap[userId]?.name || "name"}:{" "}
+            {userMap[userId]?.name || userId || "name"}:{" "}
             <span>{new Date().toLocaleDateString()}</span>
           </div>
           {message}

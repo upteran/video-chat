@@ -1,11 +1,8 @@
 .userList {
-  display: none;
+  display: block;
+  width: 320px;
   background: #f5f5fe;
   border-right: 1px solid var(--border-color);
-}
-
-.showMobile {
-  display: block;
 }
 
 .userListLine {
@@ -29,9 +26,23 @@
   height: 25px;
 }
 
-@media (min-width: 780px) {
+@media (max-width: 780px) {
   .userList {
-    display: block;
-    width: 320px;
+    display: none;
+    position: absolute;
+    z-index: 95;
+    background: #fff;
+    border-radius: 4px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 60vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 4px -3px #5c5c5c;
   }
+}
+
+
+.showMobile {
+  display: block;
 }

@@ -7,6 +7,7 @@ import { Chat } from "./screen/Chat";
 import { LogIn } from "./screen/LogIn";
 import { $chatStore } from "./entity/chat/store";
 import { AppError } from "./errors/screens/appError";
+// import { logOutEvent } from "entity/user/store";
 
 import "./styles.css";
 
@@ -22,6 +23,12 @@ class App extends React.Component<AppProps, AppState> {
   static getDerivedStateFromError() {
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
+  }
+
+  componentDidMount() {
+    window.addEventListener("beforeunload", function () {
+      // logOutEvent();
+    });
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {

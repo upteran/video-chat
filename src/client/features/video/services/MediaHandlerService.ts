@@ -78,6 +78,10 @@ export class MediaHandlerService {
     const constraints = {
       audio: { echoCancellation: true },
       video: {
+        mandatory: {
+          maxWidth: "800",
+          maxHeight: "600",
+        },
         deviceId: cameraId,
         width: { min: minWidth },
         height: { min: minHeight },

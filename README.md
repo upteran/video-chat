@@ -17,9 +17,10 @@
 - [] check blockchain ?
 - [] add security auth
 - [] remove users ws streams on exit
-- [] add error boundaries
+- [x] add error boundaries
 - [x] add client errors handler
 - [] connect messages
+- [] add lerna / separate server and client code
 #### text chat
 - [x] add: create or find chat room
 - [x] add: server message handlers

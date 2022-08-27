@@ -1,9 +1,7 @@
-import * as crypto from "crypto";
-
 export type ClientType = {
   clientId: string;
   socket: any;
-  chatId: string | null;
+  // chatId: string | null;
 };
 
 export interface CustomWebSocket extends WebSocket {
@@ -17,14 +15,22 @@ class SocketsController {
 
   constructor() {
     this.sockets = new Map();
-    const emptyList = new Set();
+    // const emptyList = new Set();
     this.chatIdsToSocket = new Map();
-    this.chatIdsToSocket.set("none", emptyList);
+    // this.chatIdsToSocket.set("none", emptyList);
     this.logger = null;
   }
 
   get socketsList() {
     return [...Array.from(this.sockets.keys())];
+  }
+
+  get socketListFullData() {
+    return this.sockets;
+  }
+
+  get chatsIds() {
+    return [...Array.from(this.chatIdsToSocket.keys())];
   }
 
   initLogger(logger: any) {
@@ -34,41 +40,33 @@ class SocketsController {
   removeSocket(socket: CustomWebSocket) {
     const cid = socket.clientId;
     if (!cid) return;
-
     this.sockets.delete(cid);
 
     this.logger.info({ list: this.socketsList }, `List of active socket`);
     // TODO: add new data format to able remove socketId from chatIdsToSocket
     // chat = chatIdsToSocket.get(); chat.removeSocket();
+    return this.sockets;
   }
 
-  addSocket(socket: CustomWebSocket) {
-    const clientId = crypto.randomBytes(16).toString("hex");
+  addSocket(socket: CustomWebSocket, clientId: string) {
     socket.clientId = clientId;
     const data = {
       chatId: null,
       socket,
-      clientId,
+      clientId, // TODO: del, client id exist in socket param
     };
     this.logger.info(`Create new client socket: ${clientId}`);
     // @ts-ignore
     this.sockets.set(clientId, data);
-    const listWithoutChat = this.chatIdsToSocket.get("none");
-    listWithoutChat?.add(clientId);
 
     this.logger.info({ list: this.socketsList }, `List of active socket`);
+    return this.sockets;
   }
 
-  checkChatExist(socket: CustomWebSocket, chatId: string) {
-    const s = this.sockets.get(socket.clientId);
-    if (s && !s.chatId) {
+  connectChatWithSocket(socket: CustomWebSocket, chatId: string) {
+    const chat = this.chatIdsToSocket.get(chatId);
+    if (!chat?.has(socket.clientId)) {
       this.logger.info(`Add ${chatId} chat id to socket: ${socket.clientId}`);
-      const data = {
-        chatId,
-        socket,
-        clientId: socket.clientId,
-      };
-      this.sockets.set(socket.clientId, data);
       let chatSet: any = new Set();
       if (this.chatIdsToSocket.get(chatId)) {
         chatSet = this.chatIdsToSocket.get(chatId);
@@ -82,10 +80,13 @@ class SocketsController {
     }
   }
 
-  removeChatFromSocket(socket: CustomWebSocket) {
-    const s = this.sockets.get(socket.clientId);
-    if (s?.chatId) {
-      s.chatId = null;
+  removeChatFromSocket(socket: CustomWebSocket, chatId: string) {
+    const chat = this.chatIdsToSocket.get(chatId);
+    if (chat?.has(socket.clientId)) {
+      chat.delete(socket.clientId);
+      if (!chat.size) {
+        this.chatIdsToSocket.delete(chatId);
+      }
     }
   }
 

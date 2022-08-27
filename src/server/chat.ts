@@ -1,8 +1,12 @@
 import { createServer } from "https";
 import { readFileSync } from "fs";
 import { WebSocketServer } from "ws";
-import { CustomWebSocket, socketController } from "./SocketsController";
-import { chatController } from "./ChatController";
+import crypto from "crypto";
+import {
+  CustomWebSocket,
+  socketController,
+} from "./controllers/SocketsController";
+import { chatController } from "./controllers/ChatController";
 import { logger } from "./logger";
 
 const server = createServer({
@@ -23,7 +27,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
   const methods: MethodsType = {
     createChat: (data) => {
       logger.info(`Handle create chat message`);
-      socketController.checkChatExist(ws, data.payload.chatId);
+      socketController.connectChatWithSocket(ws, data.payload.chatId);
       chatController.addChat(data.payload);
       socketController.sendMsgToClients(data.payload.chatId, data, {
         toSelf: true,
@@ -36,7 +40,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
         user: data.payload.user,
       });
       if (!chatData) return;
-      socketController.checkChatExist(ws, data.payload.chatId);
+      socketController.connectChatWithSocket(ws, data.payload.chatId);
       socketController.sendMsgToClients(
         data.payload.chatId,
         {
@@ -54,8 +58,8 @@ const messageHandlers = (type: string, data: any, ws: any) => {
         userName: data.payload.userName,
       });
       if (!chatData) return;
-      socketController.checkChatExist(ws, data.payload.chatId);
-      socketController.removeChatFromSocket(ws);
+      // socketController.connectChatWithSocket(ws, data.payload.chatId);
+      socketController.removeChatFromSocket(ws, data.payload.chatId);
       socketController.sendMsgToClients(
         data.payload.chatId,
         {
@@ -66,14 +70,6 @@ const messageHandlers = (type: string, data: any, ws: any) => {
         },
         { toSelf: true, currWsId: ws.clientId },
       );
-      socketController.sendMsgToClient({
-        clientId: ws.clientId,
-        msg: {
-          id: "123",
-          method: "closeChat",
-          payload: {},
-        },
-      });
     },
     updateMessagesList: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data, {
@@ -109,8 +105,9 @@ const messageHandlers = (type: string, data: any, ws: any) => {
 };
 
 wss.on("connection", function connection(ws) {
+  const clientId = crypto.randomBytes(16).toString("hex");
   //@ts-ignore
-  socketController.addSocket(ws);
+  socketController.addSocket(ws, clientId);
 
   ws.on("message", function message(data) {
     const d: any = data.toString();
