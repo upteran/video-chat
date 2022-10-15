@@ -26,11 +26,12 @@ import {
   removeFromChatWsEvent,
   removeFromChat,
   removeChatApi,
-  closeChatWsEvent,
+  closeChatEvent,
 } from "./events";
 
 // user
 import { createUser } from "../../user/helpers";
+import { logOutEvent } from "../../user/store";
 
 const initialState = {
   chat: null,
@@ -106,7 +107,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
       };
     },
   )
-  .reset(closeChatWsEvent);
+  .reset(logOutEvent);
 
 const persistChatData = (token: string) => {
   setCookie(null, "chatToken", token, {
@@ -125,7 +126,7 @@ connectChatWsEvent.watch((message) => {
   persistChatData(payload.chatId);
 });
 
-closeChatWsEvent.watch(() => {
+closeChatEvent.watch(() => {
   destroyCookie(null, "chatToken");
 });
 

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 // import { Link, Route } from "wouter";
 import { useStore } from "effector-react";
 
+import { logOutEvent } from "entity/user/store";
 import { UsersList } from "./UsersList";
 import { MessagesView } from "./MessagesView";
 import { MessageInput } from "./MessageInput";
@@ -30,6 +31,7 @@ export const Chat = () => {
   const onExitChat = () => {
     if (!chat?.chatId) return;
     removeFromChat({ userName: name, chatId: chat.chatId });
+    logOutEvent();
   };
   const onUsersClick = () => {
     setMobileVisible(!mobileVisible);

@@ -1,3 +1,4 @@
+import { createEvent } from "effector";
 import { createWsApi } from "services/ws";
 import { IWsMessage } from "services/ws/types";
 import {
@@ -33,11 +34,13 @@ const {
   "removeFromChat",
 );
 
-const { bridge: closeChatWsEvent } = createWsApi<
-  undefined,
-  undefined,
-  undefined
->("closeChat");
+// const { bridge: closeChatWsEvent } = createWsApi<
+//   undefined,
+//   undefined,
+//   undefined
+// >("closeChat");
+
+const closeChatEvent = createEvent("closeChat");
 
 export {
   createChat,
@@ -49,5 +52,5 @@ export {
   removeFromChat,
   removeFromChatWsEvent,
   removeChatApi,
-  closeChatWsEvent,
+  closeChatEvent,
 };

@@ -1,5 +1,9 @@
 ### workflow
 
+## create server certificates
+
+https://github.com/FiloSottile/mkcert
+
 
 ### roadmap
 

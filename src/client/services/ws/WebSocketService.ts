@@ -140,7 +140,7 @@ export class WebSocketService {
 }
 
 export const wsService = new WebSocketService({
-  url: "wss://192.168.3.19:8000",
+  url: "wss://192.168.8.127:8000",
 });
 
 export const destroy = wsService.init();

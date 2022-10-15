@@ -1,5 +1,6 @@
 import { createServer } from "https";
 import { readFileSync } from "fs";
+// @ts-ignore
 import { WebSocketServer } from "ws";
 import crypto from "crypto";
 import {
@@ -59,7 +60,6 @@ const messageHandlers = (type: string, data: any, ws: any) => {
       });
       if (!chatData) return;
       // socketController.connectChatWithSocket(ws, data.payload.chatId);
-      socketController.removeChatFromSocket(ws, data.payload.chatId);
       socketController.sendMsgToClients(
         data.payload.chatId,
         {
@@ -68,8 +68,9 @@ const messageHandlers = (type: string, data: any, ws: any) => {
             ...chatData,
           },
         },
-        { toSelf: true, currWsId: ws.clientId },
+        { toSelf: false, currWsId: ws.clientId },
       );
+      socketController.removeChatFromSocket(ws, data.payload.chatId);
     },
     updateMessagesList: (data) => {
       socketController.sendMsgToClients(data.payload.chatId, data, {
@@ -104,12 +105,12 @@ const messageHandlers = (type: string, data: any, ws: any) => {
   return (methods[type] || methods.defaultAction)(data);
 };
 
-wss.on("connection", function connection(ws) {
+wss.on("connection", function connection(ws: any) {
   const clientId = crypto.randomBytes(16).toString("hex");
   //@ts-ignore
   socketController.addSocket(ws, clientId);
 
-  ws.on("message", function message(data) {
+  ws.on("message", function message(data: any) {
     const d: any = data.toString();
     const parsed = JSON.parse(d);
     //@ts-ignore
@@ -130,7 +131,7 @@ wss.on("connection", function connection(ws) {
   });
 });
 
-wss.on("error", (err) => {
+wss.on("error", (err: any) => {
   console.log("error", err);
 });
 

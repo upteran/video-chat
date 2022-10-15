@@ -99,7 +99,7 @@ class SocketsController {
     if (!ids) {
       this.logger.info(
         { message: msg },
-        `Couldn't send message to any client, noa ${chatId} id`,
+        `Couldn't send message to any client, no ${chatId} id`,
       );
       this.logger.info({ chats: this.chatIdsToSocket });
       return;

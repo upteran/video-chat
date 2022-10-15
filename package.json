@@ -83,6 +83,7 @@
     "ts-node": "^10.7.0",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "webrtc-adapter": "^8.1.1",
-    "wouter": "^2.8.0-alpha.2"
+    "wouter": "^2.8.0-alpha.2",
+    "ws": "^8.9.0"
   }
 }
