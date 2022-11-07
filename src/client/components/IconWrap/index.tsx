@@ -1,13 +1,27 @@
 import React from "react";
-import { UserIcon } from "@heroicons/react/solid";
+import cx from "classnames";
 
-export const Icon = ({ onClick }) => {
+import "./styles.css";
+
+type IconWrapProps = {
+  onClick: () => void;
+  children: any;
+  classes?: string;
+  onlyMobile?: boolean;
+};
+
+export const IconWrap = ({
+  onClick,
+  children,
+  classes,
+  onlyMobile = true,
+}: IconWrapProps) => {
   return (
     <button
-      className="circleBtn mobileVisibleFlex"
+      className={cx("circleBtn", { mobileVisibleFlex: onlyMobile }, classes)}
       onClick={onClick}
     >
-      <UserIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
+      {children}
     </button>
   );
 };

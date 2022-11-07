@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
 
-import { PaperAirplaneIcon } from "@heroicons/react/solid";
+import { PaperAirplaneIcon, UserIcon } from "@heroicons/react/solid";
 import { sendChatMessage } from "entity/messages/store/events";
-
+import { toggleMobileUserList } from "entity/chat/store/events";
 import { FieldInput } from "components/FieldInput";
 import { $chatStore } from "entity/chat/store";
 import { $userStore } from "entity/user/store";
@@ -27,6 +27,10 @@ export const MessageInput = () => {
     sendChatMessage({ message: value, chatId: chat.chatId, userId: name });
     setValue("");
     setMsgError(false);
+  };
+
+  const onUsersClick = () => {
+    toggleMobileUserList();
   };
 
   return (

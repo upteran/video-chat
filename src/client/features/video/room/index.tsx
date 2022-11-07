@@ -49,7 +49,10 @@ export const Room = () => {
 
   return (
     <div className="videoRoomOuter">
-      <button className="videoClose" onClick={closeVideo}>
+      <button
+        className="videoClose circleBtn circleBtn-sm"
+        onClick={closeVideo}
+      >
         <XIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
       </button>
       <div className="videoRoomInner">

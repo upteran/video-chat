@@ -41,6 +41,7 @@ const {
 // >("closeChat");
 
 const closeChatEvent = createEvent("closeChat");
+const toggleMobileUserList = createEvent("toggleMobileUserList");
 
 export {
   createChat,
@@ -53,4 +54,5 @@ export {
   removeFromChatWsEvent,
   removeChatApi,
   closeChatEvent,
+  toggleMobileUserList,
 };

@@ -10,5 +10,5 @@
   color: white;
   border: none;
   transform: rotate(90deg);
-  background: #fff;
+  background: var(--main-color-bg-input);
 }

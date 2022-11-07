@@ -27,6 +27,7 @@ import {
   removeFromChat,
   removeChatApi,
   closeChatEvent,
+  toggleMobileUserList,
 } from "./events";
 
 // user
@@ -38,6 +39,7 @@ const initialState = {
   loadedState: LoadStateStatus.notLoaded,
   messages: [],
   messagesInfoMap: null,
+  mobileUserListHide: true,
 };
 
 const colorGenerate = () =>
@@ -57,6 +59,12 @@ const createUsersViewData = (users: Array<any>, oldState = {}) => {
 };
 
 export const $chatStore = createStore<ChatStateType>(initialState)
+  .on(toggleMobileUserList, (chat) => {
+    return {
+      ...chat,
+      mobileUserListHide: !chat.mobileUserListHide,
+    };
+  })
   .on(createChat, (chat) => {
     return {
       ...chat,
@@ -71,6 +79,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
       loadedState: LoadStateStatus.loaded,
       messages: [],
       messagesInfoMap: createUsersViewData(payload.users),
+      mobileUserListHide: true,
     };
   })
   .on(
@@ -87,6 +96,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         loadedState: LoadStateStatus.loaded,
         messages,
         messagesInfoMap: createUsersViewData(users),
+        mobileUserListHide: true,
       };
     },
   )
@@ -97,6 +107,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         payload: { chatId, users, messages },
       } = message;
       return {
+        ...chat,
         chat: {
           users,
           chatId,
@@ -104,6 +115,7 @@ export const $chatStore = createStore<ChatStateType>(initialState)
         loadedState: LoadStateStatus.loaded,
         messages,
         messagesInfoMap,
+        mobileUserListHide: true,
       };
     },
   )

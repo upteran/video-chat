@@ -13,6 +13,7 @@ export interface ChatConnected extends Chat {
 }
 
 export type ChatStateType = {
+  mobileUserListHide: boolean;
   chat: Chat | null;
   loadedState: LoadStateStatus;
   messages: Array<Message>;

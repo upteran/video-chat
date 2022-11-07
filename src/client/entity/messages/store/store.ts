@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { connectChatWsEvent } from "entity/chat/store/events";
 import { IWsMessage } from "services/ws/types";
 import { Message } from "../types";
+import { logOutEvent } from "../../user/store";
 
 import {
   updateMessagesListWsEvent,
@@ -16,12 +17,11 @@ sendChatMessage.watch(({ message, chatId, userId }) => {
   chatMsgApi({ message, chatId, messageId: nanoid(), userId });
 });
 
-export const $messagesList = createStore<any>([]).on(
-  updateMessagesListWsEvent,
-  (list, result: IWsMessage<Message>) => {
+export const $messagesList = createStore<any>([])
+  .on(updateMessagesListWsEvent, (list, result: IWsMessage<Message>) => {
     return result?.payload ? [...list, result.payload] : [];
-  },
-);
+  })
+  .reset(logOutEvent);
 
 sample({
   clock: connectChatWsEvent,

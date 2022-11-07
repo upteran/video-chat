@@ -26,8 +26,8 @@ export const LogIn = () => {
         <AddUser />
       ) : (
         <>
-          <button onClick={onLogOutClick} className="exitAccount">
-            <XIcon className="h-6 w-6 text-gray-500 hover:text-gray-800 icon" />
+          <button onClick={onLogOutClick} className="exitAccount btnExit">
+            <XIcon className="h-6 w-6 icon" />
           </button>
           <div className="h2 underline mb-3.5">Hi, {name}!</div>
           <AddChat />

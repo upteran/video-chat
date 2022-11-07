@@ -1,7 +1,7 @@
 .userList {
   display: block;
   width: 320px;
-  background: #f5f5fe;
+  background: var(--main-color-bg-sidebar);
   border-right: 1px solid var(--border-color);
 }
 
@@ -23,22 +23,36 @@
 }
 
 .userActions {
-  height: 25px;
+  padding: 4px;
+}
+
+.copyBtnDesktop {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 2;
+}
+
+.backToChatBtn {
+  margin: 18px;
 }
 
 @media (max-width: 780px) {
   .userList {
     display: none;
-    position: absolute;
+    position: fixed;
     z-index: 95;
-    background: #fff;
+    background: var(--main-color-bg-sidebar);
     border-radius: 4px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 60vh;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
     overflow-y: auto;
-    box-shadow: 0 5px 4px -3px #5c5c5c;
+  }
+
+  .userListLine {
+    padding: 12px 24px 12px 18px;
   }
 }
 
