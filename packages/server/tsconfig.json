@@ -1,3 +1,18 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "typeRoots": ["node_modules/@types"],
+    "baseUrl": "./src"
+  },
+  "include": ["/**/**/*.tsx", "./*.ts", "**/**/*.js", "./*.js"],
+  "exclude": ["node_modules"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.js"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": ["off"]
+      }
+    }
+  ]
 }
