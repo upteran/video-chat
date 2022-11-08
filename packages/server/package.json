@@ -17,7 +17,7 @@
     "build": "pnpm run clean-dist && tsc",
     "clean-dist": "rimraf dist/*",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --quiet",
-    "dev": "ts-node ./src/chat.ts"
+    "dev": "ts-node ./src/server.ts"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
