@@ -14,7 +14,7 @@
   },
   "homepage": "",
   "scripts": {
-    "build": "pnpm run clean-dist && tsc",
+    "build": "npm run clean-dist && tsc",
     "clean-dist": "rimraf dist/*",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --quiet",
     "dev": "ts-node ./src/server.ts"
