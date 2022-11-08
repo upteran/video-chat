@@ -143,4 +143,4 @@ wss.on("close", (msg: any) => {
   console.log("close", msg);
 });
 
-server.listen(8000);
+server.listen(process.env.PORT || 8000);
