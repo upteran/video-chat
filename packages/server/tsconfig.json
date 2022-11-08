@@ -1,7 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "moduleResolution": "node",
+    "target": "es2015",
     "module": "commonjs",
     "strict": true,
     "sourceMap": true,
@@ -10,17 +10,16 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "target": "es2015",
     "declarationDir": "./dist",
     "outDir": "./dist",
     "typeRoots": ["node_modules/@types"],
     "baseUrl": "."
   },
-  "include": ["./src/**/**/*.tsx", "./*.ts", "**/**/*.js", "./*.js"],
-  "exclude": ["node_modules"],
+  "include": ["src/**/**/*.ts", "./*.ts", "src/**/**/*.js", "./*.js"],
+  "exclude": ["node_modules", "dist"],
   "overrides": [
     {
-      "files": ["*.ts", "*.js"],
+      "files": ["*.jsx", "*.tsx", "*.ts", "*.js"],
       "rules": {
         "@typescript-eslint/explicit-module-boundary-types": ["off"]
       }
