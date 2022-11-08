@@ -6,7 +6,7 @@
     "typeRoots": ["node_modules/@types"],
     "baseUrl": "./src"
   },
-  "include": ["/**/**/*.tsx", "./*.ts", "**/**/*.js", "./*.js"],
+  "include": ["/**/**/*.tsx", "./*.ts", "**/**/*.js", "./*.js", "types/environment.d.ts"],
   "exclude": ["node_modules"],
   "overrides": [
     {

@@ -143,7 +143,7 @@ export class WebSocketService {
 }
 
 export const wsService = new WebSocketService({
-  url: "wss://localhost:8000",
+  url: `wss://${process.env.WS_HOST}:${process.env.WS_PORT}`,
 });
 
 export const destroy = wsService.init();

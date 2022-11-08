@@ -14,8 +14,8 @@
   },
   "homepage": "",
   "scripts": {
-    "build": "npm run clean-dist && tsc",
-    "clean-dist": "rimraf dist/*",
+    "build": "npm run clean-dist && tsc --project ./tsconfig.json",
+    "clean-dist": "rimraf ./dist/*",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --quiet",
     "dev": "ts-node server.ts"
   },
