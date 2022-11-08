@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "jsx": "react",
+    "typeRoots": ["node_modules/@types"],
+    "baseUrl": "./src"
+  },
+  "include": ["/**/**/*.tsx", "./*.ts", "**/**/*.js", "./*.js"],
+  "exclude": ["node_modules"],
+  "overrides": [
+    {
+      "files": ["*.jsx", "*.tsx", "*.ts", "*.js"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": ["off"]
+      }
+    }
+  ]
+}

@@ -74,6 +74,7 @@ export class WebSocketService {
         () => true,
       );
 
+      // @ts-ignore
       const sub = obs?.subscribe((msg: IWsMessage<any>): void => {
         this.req(msg);
       });
@@ -103,6 +104,7 @@ export class WebSocketService {
     if (!this.isConnect) {
       this.notSendMsg.push(msg);
     }
+    // @ts-ignore
     this.socket?.next(msg);
     console.log("message res", msg);
   }
@@ -117,6 +119,7 @@ export class WebSocketService {
       () => {
         return `unsub ${name}`;
       },
+      // @ts-ignore
       (msg: IWsMessage<any>) => {
         return msg.method === name;
       },
@@ -140,7 +143,7 @@ export class WebSocketService {
 }
 
 export const wsService = new WebSocketService({
-  url: "wss://192.168.8.127:8000",
+  url: "wss://localhost:8000",
 });
 
 export const destroy = wsService.init();

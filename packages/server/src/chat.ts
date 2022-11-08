@@ -50,7 +50,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
             ...chatData,
           },
         },
-        { toSelf: true, currWsId: ws.clientId },
+        { toSelf: true, currWsId: ws.clientId }
       );
     },
     removeFromChat: (data) => {
@@ -68,7 +68,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
             ...chatData,
           },
         },
-        { toSelf: false, currWsId: ws.clientId },
+        { toSelf: false, currWsId: ws.clientId }
       );
       socketController.removeChatFromSocket(ws, data.payload.chatId);
     },

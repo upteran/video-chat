@@ -2,7 +2,7 @@
 dist/
 node_modules/
 src/**/*.jsx
-tests/__coverage__/
+packages/chat-client/tests/__coverage__/
 tests/**/*.jsx
 cert*.pem
 

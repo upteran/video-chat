@@ -15,10 +15,10 @@
     "outDir": "./dist",
     "jsx": "react",
     "typeRoots": ["node_modules/@types"],
-    "baseUrl": "./src/client/",
+    "baseUrl": "."
   },
   "include": ["src/**/**/*.ts", "./*.ts", "src/**/**/*.js", "./*.js"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "overrides": [
     {
       "files": ["*.jsx", "*.tsx", "*.ts", "*.js"],

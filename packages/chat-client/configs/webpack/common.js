@@ -7,10 +7,10 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     alias: {
-      components: resolve(__dirname, "../../src/client/components/"),
-      entity: resolve(__dirname, "../../src/client/entity/"),
-      features: resolve(__dirname, "../../src/client/features/"),
-      services: resolve(__dirname, "../../src/client/services/"),
+      components: resolve(__dirname, "../../src/components/"),
+      entity: resolve(__dirname, "../../src/entity/"),
+      features: resolve(__dirname, "../../src/features/"),
+      services: resolve(__dirname, "../../src/services/"),
     },
   },
   context: resolve(__dirname, "../../src"),
@@ -35,7 +35,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: "client/index.html.ejs" }),
+    new HtmlWebpackPlugin({ template: "index.html.ejs" }),
     new TsconfigPathsPlugin({}),
   ],
   externals: {

@@ -4,7 +4,10 @@ import { parseCookies } from "nookies";
 
 import { FieldInput } from "components/FieldInput";
 import { Spinner } from "components/Spinner";
-import { connectChat, createChat } from "entity/chat/store/events";
+import {
+  connectChat,
+  createChat,
+} from "entity/chat/store/events";
 import { $userStore } from "entity/user/store";
 import { $chatStore } from "entity/chat/store";
 import { LoadStateStatus } from "entity/chat/consts";
