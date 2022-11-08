@@ -10,9 +10,13 @@ import {
 import { chatController } from "./src/controllers/ChatController";
 import { logger } from "./src/logger";
 
+const serverConfigs =
+  process.env.NODE_ENV === "production"
+    ? {}
+    : { cert: readFileSync("./cert.pem"), key: readFileSync("./cert-key.pem") };
+
 const server = createServer({
-  cert: readFileSync("./cert.pem"),
-  key: readFileSync("./cert-key.pem"),
+  ...serverConfigs,
 });
 
 const wss = new WebSocketServer({ server });
@@ -50,7 +54,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
             ...chatData,
           },
         },
-        { toSelf: true, currWsId: ws.clientId }
+        { toSelf: true, currWsId: ws.clientId },
       );
     },
     removeFromChat: (data) => {
@@ -68,7 +72,7 @@ const messageHandlers = (type: string, data: any, ws: any) => {
             ...chatData,
           },
         },
-        { toSelf: false, currWsId: ws.clientId }
+        { toSelf: false, currWsId: ws.clientId },
       );
       socketController.removeChatFromSocket(ws, data.payload.chatId);
     },
