@@ -44,4 +44,9 @@ https://github.com/FiloSottile/mkcert
 
 #### bugs
 
+#### CI/CD 
+
+- [] check what proj change and toggle only one proj
+- [] use lerna for checks and run commands
+
 [] send offer to all users in chat. Need use users Id and connect it with ws connections instances, to compare it when RTC offer is got
