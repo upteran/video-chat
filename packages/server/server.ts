@@ -6,9 +6,9 @@ import crypto from "crypto";
 import {
   CustomWebSocket,
   socketController,
-} from "./controllers/SocketsController";
-import { chatController } from "./controllers/ChatController";
-import { logger } from "./logger";
+} from "./src/controllers/SocketsController";
+import { chatController } from "./src/controllers/ChatController";
+import { logger } from "./src/logger";
 
 const server = createServer({
   cert: readFileSync("./cert.pem"),

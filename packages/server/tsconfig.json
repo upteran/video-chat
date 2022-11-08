@@ -3,9 +3,9 @@
   "compilerOptions": {
     "outDir": "./dist",
     "typeRoots": ["node_modules/@types"],
-    "baseUrl": "./src"
+    "baseUrl": "."
   },
-  "include": ["/**/**/*.tsx", "./*.ts", "**/**/*.js", "./*.js"],
+  "include": ["./src/**/**/*.tsx", "./*.ts", "**/**/*.js", "./*.js"],
   "exclude": ["node_modules"],
   "overrides": [
     {
