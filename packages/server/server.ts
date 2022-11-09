@@ -2,6 +2,7 @@ import { createServer } from "https";
 import { readFileSync } from "fs";
 // @ts-ignore
 import { WebSocketServer } from "ws";
+// @ts-ignore
 import crypto from "crypto";
 import {
   CustomWebSocket,
@@ -17,6 +18,12 @@ const serverConfigs =
 
 const server = createServer({
   ...serverConfigs,
+
+}, (req, res) => {
+  if(req.url === '/') {
+    res.write(' Welcome to contact us page');
+    res.end();
+  }
 });
 
 const wss = new WebSocketServer({ server });
