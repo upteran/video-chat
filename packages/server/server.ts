@@ -152,4 +152,6 @@ wss.on("close", (msg: any) => {
   console.log("close", msg);
 });
 
-server.listen({ port: process.env.PORT || 8000 });
+server.listen({ port: process.env.PORT || 8000 }, () => {
+  console.log(`Start ws server on port`);
+});
