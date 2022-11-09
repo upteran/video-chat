@@ -1,0 +1,62 @@
+.userList {
+  display: block;
+  width: 320px;
+  background: var(--main-color-bg-sidebar);
+  border-right: 1px solid var(--border-color);
+}
+
+.userListLine {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+  padding: 12px 24px 12px 12px;
+  font-size: 14px;
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.userActions {
+  padding: 4px;
+}
+
+.copyBtnDesktop {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 2;
+}
+
+.backToChatBtn {
+  margin: 18px;
+}
+
+@media (max-width: 780px) {
+  .userList {
+    display: none;
+    position: fixed;
+    z-index: 95;
+    background: var(--main-color-bg-sidebar);
+    border-radius: 4px;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .userListLine {
+    padding: 12px 24px 12px 18px;
+  }
+}
+
+
+.showMobile {
+  display: block;
+}

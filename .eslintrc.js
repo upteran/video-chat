@@ -26,5 +26,7 @@ module.exports = {
   },
   globals: {
     SignalingChannel: true,
+    WS_HOST: true,
+    WS_PORT: true,
   },
 };

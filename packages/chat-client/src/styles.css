@@ -1,0 +1,135 @@
+@import 'reset-css/reset.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --border-color: #343e71;
+  --btn-bg-color: #45d3c2;
+  --btn-bg-color-hv: #3aafa1;
+  --btn-bg-color-active: #256c64;
+  --form-item-height: 43px;
+  --chat-header-height: 43px;
+  --border-radius-inputs: 8px;
+  --main-color-bg: #2b3566;
+  --main-color-bg-light: rgb(69 211 194);
+  --main-color-bg-input: #151a33;
+  --main-color-bg-sidebar: #262f59;
+
+  /* media */
+  /*--tablet-media: 780px;*/
+}
+
+/*@custom-media --tablet-media (max-width: 780px);*/
+
+body {
+  color: #000;
+  @apply font-sans;
+  font-size: 16px;
+}
+
+button {
+  height: 42px;
+  border: none;
+}
+
+.app {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to bottom, #0e112c, #20253c);
+}
+
+/* base components */
+.input {
+  padding: 12px 12px 12px 8px;
+  margin: 0;
+  border: 1px solid var(--border-color);
+  outline: none;
+  font-size: 14px;
+  @apply font-sans;
+  transition: all .25s ease-in;
+  width: 100%;
+  height: var(--form-item-height);
+  border-radius: var(--border-radius-inputs);
+  color: #fff;
+  background: var(--main-color-bg-input);
+
+}
+
+.input:focus, .input:hover, .input:active {
+  outline: none;
+  transition: all .25s ease-in;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  color: #000;
+  @apply font-sans;
+  width: 100%;
+  border: none;
+  border-radius: var(--border-radius-inputs);
+  background-color: var(--btn-bg-color);
+  padding: 0 8px;
+  text-align: center;
+  line-height: var(--form-item-height);
+  transition: background-color .25s ease-out;
+  height: var(--form-item-height);
+}
+
+.icon {
+  color: #57629a;
+  transition: color .25s ease-out;
+}
+
+.icon:hover {
+  color: #d5d4d4;
+  transition: color .25s ease-out;
+}
+
+.button:hover {
+  background-color: var(--btn-bg-color-hv);
+  transition: background-color .25s ease-out;
+}
+
+.button:active {
+  background-color: var(--btn-bg-color-active);
+  transition: background-color .25s ease-out;
+}
+
+.h1 {
+  @apply font-mono;
+  font-size: 24px;
+  line-height: 1.3;
+}
+
+.h2 {
+  @apply font-mono;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.h3 {
+  @apply font-mono;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.mobileVisible {
+  display: none;
+}
+
+.mobileVisibleFlex {
+  display: none; /* reorder any styles */
+}
+
+@media (max-width: 540px) {
+  .mobileVisible {
+    display: block; /* reorder any styles */
+  }
+  .mobileVisibleFlex {
+    display: flex; /* reorder any styles */
+  }
+}
