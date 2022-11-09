@@ -4,6 +4,10 @@ const { resolve } = require("path");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+require("dotenv").config({ path: "./.env" });
+
+console.log(process.env)
+
 module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
