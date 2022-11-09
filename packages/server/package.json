@@ -17,7 +17,8 @@
     "build": "npm run clean-dist && tsc --project ./tsconfig.json",
     "clean-dist": "rimraf ./dist/*",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --quiet",
-    "dev": "ts-node server.ts"
+    "dev": "ts-node server.ts",
+    "start": "node dist/server.js"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
