@@ -16,15 +16,17 @@ const serverConfigs =
     ? {}
     : { cert: readFileSync("./cert.pem"), key: readFileSync("./cert-key.pem") };
 
-const server = createServer({
-  ...serverConfigs,
-
-}, (req, res) => {
-  if(req.url === '/') {
-    res.write(' Welcome to contact us page');
-    res.end();
-  }
-});
+const server = createServer(
+  {
+    ...serverConfigs,
+  },
+  (req, res) => {
+    if (req.url === "/") {
+      res.write(" Welcome to contact us page");
+      res.end();
+    }
+  },
+);
 
 const wss = new WebSocketServer({ server });
 

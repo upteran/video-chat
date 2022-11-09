@@ -14,11 +14,10 @@
   },
   "homepage": "",
   "scripts": {
-    "build": "npm run clean-dist && tsc --project ./tsconfig.json",
     "clean-dist": "rimraf ./dist/*",
     "lint": "eslint './src/**/*.{js,ts,tsx}' --quiet",
     "dev": "ts-node server.ts",
-    "start": "node dist/server.js"
+    "start": "ts-node server.ts"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
