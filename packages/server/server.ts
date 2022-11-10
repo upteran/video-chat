@@ -12,19 +12,29 @@ import {
 import { chatController } from "./src/controllers/ChatController";
 import { logger } from "./src/logger";
 
-// TODO: add sert to server
-const serverConfigs =
-  process.env.NODE_ENV === "production"
-    ? {}
-    : { cert: readFileSync("./cert.pem"), key: readFileSync("./cert-key.pem") };
+// TODO: add cert to server
 
 const port = process.env.PORT || 3000;
 
-const app = express();
+const devCert = {
+  cert: readFileSync("./cert.pem"),
+  key: readFileSync("./cert-key.pem"),
+};
 
-const server = https.createServer(serverConfigs, app).listen(port, () => {
-  console.log(`server is running at port ${port}`);
-});
+const app = express();
+let server = null;
+
+if (process.env.NODE_ENV !== "production") {
+  const serverConfigs = process.env.NODE_ENV === "production" ? {} : devCert;
+
+  server = https.createServer(serverConfigs, app).listen(port, () => {
+    console.log(`server is running at port ${port}`);
+  });
+} else {
+  server = app
+    .use((req: any, res: any) => res.send("Hello server"))
+    .listen(port, () => console.log(`Listening on ${port}`));
+}
 
 const wss = new WebSocketServer({ server });
 
