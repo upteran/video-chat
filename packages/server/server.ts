@@ -16,16 +16,15 @@ import { logger } from "./src/logger";
 
 const port = process.env.PORT || 3000;
 
-const devCert = {
-  cert: readFileSync("./cert.pem"),
-  key: readFileSync("./cert-key.pem"),
-};
-
 const app = express();
 let server = null;
 
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 if (process.env.NODE_ENV !== "production") {
-  const serverConfigs = process.env.NODE_ENV === "production" ? {} : devCert;
+  const serverConfigs = {
+    cert: readFileSync("./cert.pem"),
+    key: readFileSync("./cert-key.pem"),
+  };
 
   server = https.createServer(serverConfigs, app).listen(port, () => {
     console.log(`server is running at port ${port}`);
