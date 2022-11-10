@@ -5,4 +5,5 @@ src/**/*.jsx
 packages/chat-client/tests/__coverage__/
 tests/**/*.jsx
 cert*.pem
+.env
 

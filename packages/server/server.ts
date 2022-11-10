@@ -1,7 +1,9 @@
-import { createServer } from "https";
+import express from "express";
+import https from "https";
 import { readFileSync } from "fs";
 // @ts-ignore
 import { WebSocketServer } from "ws";
+// @ts-ignore
 import crypto from "crypto";
 import {
   CustomWebSocket,
@@ -10,13 +12,18 @@ import {
 import { chatController } from "./src/controllers/ChatController";
 import { logger } from "./src/logger";
 
+// TODO: add sert to server
 const serverConfigs =
   process.env.NODE_ENV === "production"
     ? {}
     : { cert: readFileSync("./cert.pem"), key: readFileSync("./cert-key.pem") };
 
-const server = createServer({
-  ...serverConfigs,
+const port = process.env.PORT || 3000;
+
+const app = express();
+
+const server = https.createServer(serverConfigs, app).listen(port, () => {
+  console.log(`server is running at port ${port}`);
 });
 
 const wss = new WebSocketServer({ server });
@@ -142,5 +149,3 @@ wss.on("error", (err: any) => {
 wss.on("close", (msg: any) => {
   console.log("close", msg);
 });
-
-server.listen({ port: process.env.PORT || 8000 });
