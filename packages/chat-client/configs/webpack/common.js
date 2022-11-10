@@ -40,7 +40,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       "process.env.WS_HOST": JSON.stringify(process.env.WS_HOST || "locahost"),
-      "process.env.WS_PORT": JSON.stringify(process.env.WS_PORT || "8000"),
+      "process.env.WS_PORT": JSON.stringify(process.env.WS_PORT),
     }),
     new HtmlWebpackPlugin({ template: "index.html.ejs" }),
     new TsconfigPathsPlugin({}),

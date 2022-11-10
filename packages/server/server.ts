@@ -17,7 +17,7 @@ const serverConfigs =
     ? {}
     : { cert: readFileSync("./cert.pem"), key: readFileSync("./cert-key.pem") };
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 
 const app = express();
 
