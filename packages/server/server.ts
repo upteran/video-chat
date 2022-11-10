@@ -19,15 +19,15 @@ const serverConfigs =
 
 const port = process.env.PORT || 3000;
 
-const app = express();
+const app = express()
+  .use((req: any, res: any) => res.send("Hello server"))
+  .listen(port, () => console.log(`Listening on ${port}`));
 
-app.get("/", (req, res) => res.send("Hello moto"));
-// .use((req: any, res: any) => res.send("Hello server"))
-// .listen(port, () => console.log(`Listening on ${port}`));
+// app.get("/", (req, res) => res.send("Hello moto"));
 
-const server = https.createServer(serverConfigs, app).listen(port, function () {
-  console.log("Express server listening on port " + port);
-});
+// const server = https.createServer(serverConfigs, app).listen(port, function () {
+//   console.log("Express server listening on port " + port);
+// });
 // const server = createServer(
 //   {
 //     ...serverConfigs,
@@ -41,7 +41,7 @@ const server = https.createServer(serverConfigs, app).listen(port, function () {
 //   },
 // );
 
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ server: app });
 
 socketController.initLogger(logger);
 chatController.initLogger(logger);
