@@ -12,6 +12,7 @@ import {
 import { chatController } from "./src/controllers/ChatController";
 import { logger } from "./src/logger";
 
+// TODO: add sert to server
 const serverConfigs =
   process.env.NODE_ENV === "production"
     ? {}
@@ -19,13 +20,11 @@ const serverConfigs =
 
 const port = process.env.PORT || 3000;
 
-const server = express()
-  .use((req: any, res: any) => res.send("Hello server"))
-  .listen(port, () => console.log(`Listening on ${port}`));
+const app = express();
 
-// const server = https.createServer(serverConfigs, app).listen(port, function () {
-//   console.log("Express server listening on port " + port);
-// });
+const server = https.createServer(serverConfigs, app).listen(port, () => {
+  console.log(`server is running at port ${port}`);
+});
 
 const wss = new WebSocketServer({ server });
 
@@ -150,39 +149,3 @@ wss.on("error", (err: any) => {
 wss.on("close", (msg: any) => {
   console.log("close", msg);
 });
-
-// server.listen({ port: process.env.PORT || 8000 }, () => {
-//   console.log(`Start ws server on port`);
-// });
-
-// =====
-
-//------
-// const express = require("express");
-// const { Server } = require("ws");
-//
-// const PORT = process.env.PORT || 3000;
-// const INDEX = "/index.html";
-//
-// const server = express()
-//   .use(
-//     (
-//       req: any,
-//       res: { sendFile: (arg0: string, arg1: { root: string }) => any },
-//     ) => res.sendFile(INDEX, { root: __dirname }),
-//   )
-//   .listen(PORT, () => console.log(`Listening on ${PORT}`));
-//
-// const wss = new Server({ server });
-//
-// wss.on("connection", (ws: { on: (arg0: string, arg1: () => void) => void }) => {
-//   console.log("Client connected");
-//   ws.on("close", () => console.log("Client disconnected"));
-// });
-//
-// setInterval(() => {
-//   wss.clients.forEach((client: { send: (arg0: string) => void }) => {
-//     client.send(new Date().toTimeString());
-//   });
-// }, 1000);
-//------
