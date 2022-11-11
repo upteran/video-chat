@@ -14,19 +14,19 @@ export const MessageInput = () => {
   const { chat } = useStore($chatStore);
   const { name } = useStore($userStore);
   const [value, setValue] = useState<string>("");
-  const [msgError, setMsgError] = useState<boolean>(false);
+  const [msgError, setMsgError] = useState<string | null>(null);
   const onChange = (value: string): void => {
     setValue(value);
   };
 
   const onClick = async () => {
     if (!chat || !value) {
-      setMsgError(true);
+      setMsgError(" ");
       return;
     }
     sendChatMessage({ message: value, chatId: chat.chatId, userId: name });
     setValue("");
-    setMsgError(false);
+    setMsgError(null);
   };
 
   const onUsersClick = () => {
