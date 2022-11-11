@@ -16,7 +16,7 @@ export const AddChat = () => {
   const { name } = useStore($userStore);
   const { loadedState } = useStore($chatStore);
   const [chatLink, setChatLink] = useState<string>("");
-  const [chatLinkError, setChatLinkError] = useState<boolean>(false);
+  const [chatLinkError, setChatLinkError] = useState<string | null>(null);
 
   useEffect(() => {
     // TODO: change reconnect logic after
@@ -24,14 +24,14 @@ export const AddChat = () => {
     if (!cookie) return;
 
     if (cookie.chatToken && cookie.chatUser) {
-      setChatLinkError(false);
+      setChatLinkError(null);
       connectChat({ userName: cookie?.chatUser, chatId: cookie?.chatToken });
     }
   }, []);
 
   const onEnterChatClick = () => {
     if (!chatLink.length) {
-      setChatLinkError(true);
+      setChatLinkError("Enter chat id");
       return;
     }
     connectChat({ userName: name, chatId: chatLink });

@@ -1,5 +1,6 @@
 .wrap {
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   margin: 0 auto;
   background: linear-gradient(to bottom, #0e112c, #20253c);
   color: #fff;

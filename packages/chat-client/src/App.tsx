@@ -29,11 +29,19 @@ class App extends React.Component<AppProps, AppState> {
     window.addEventListener("beforeunload", function () {
       // logOutEvent();
     });
+
+    this.setCssVariableForCurrentFullHeight();
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.log("Caught client error", error);
   }
+
+  // хак для определения высоты viewport - https://css-tricks.com/the-trick-to-viewport-units-on-mobile;
+  setCssVariableForCurrentFullHeight = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  };
 
   state = {
     hasError: false,

@@ -2,7 +2,7 @@ import React from "react";
 import cx from "classnames";
 
 type FieldInputProps = {
-  error: boolean | null;
+  error: string | null;
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
@@ -24,14 +24,17 @@ export const FieldInput = ({
     }
   };
   return (
-    <input
-      className={cx("input", {
-        error: error,
-      })}
-      type="text"
-      value={value}
-      onKeyPress={onKeyPress}
-      onChange={onChangeHandler}
-    />
+    <>
+      {error && <div className="inputFormError">{error}</div>}
+      <input
+        className={cx("input", {
+          error: !!error,
+        })}
+        type="text"
+        value={value}
+        onKeyPress={onKeyPress}
+        onChange={onChangeHandler}
+      />
+    </>
   );
 };

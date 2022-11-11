@@ -76,6 +76,13 @@ Steps:
 - [create certificates](https://github.com/FiloSottile/mkcert)
 - store it in each package folder
 
+## Run project
+
+- create certificates and store it
+- add .env to web-client
+- install dependencies
+- run dev mode
+
 
 =======
 

@@ -30,7 +30,7 @@ export const CopyClipboard = ({
       className={cx("copyBtn", { mobileVisibleFlex: isMobile }, classes)}
       onClick={onCopyClick}
     >
-      <ClipboardCopyIcon className="h-6 w-6 text-gray-500 hover:text-gray-700 icon" />
+      <ClipboardCopyIcon className="h-6 w-6 icon" />
       <span>{!isCopy ? "COPY CHAT LINK" : "LINK IS COPIED"}</span>
     </button>
   );

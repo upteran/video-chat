@@ -7,17 +7,17 @@ import "./styles.css";
 
 export const AddUser = () => {
   const [value, setValue] = useState<string>("");
-  const [error, setError] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const onChange = (text: string): void => {
     if (text && error) {
-      setError(false);
+      setError(null);
     }
     setValue(text);
   };
 
   const onClick = async () => {
     if (!value) {
-      setError(true);
+      setError("Enter your nick");
     } else {
       createUserEvent(value);
       setValue("");
