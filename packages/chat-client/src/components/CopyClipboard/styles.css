@@ -48,6 +48,9 @@
     border-radius: 25px;
     padding: 20px 10px;
   }
+}
+
+@media (hover:hover) {
   .copyBtn:hover {
     width: auto;
     border-radius: 20px;
